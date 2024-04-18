@@ -345,4 +345,11 @@ This should result in the following messages:
         create mode 100644 requirements.txt
 
 
+---------------------------------------------------------------------------------------------
+Pushing the project from git to github
+---------------------------------------------------------------------------------------------
+
+First, we check SSH keys - this is used to authenticate to gitbug when we push the project.
+
+ls -al ~/.ssh
 
