@@ -254,7 +254,7 @@ Extra folder for miscellaneous files
 ---------------------------------------------------------------------------------------------
 
 An extra folder called misc is created under the project directory to hol miscellaneous 
-files such as this readme fileand the database DDL script.
+files such the database DDL script.
 
 ---------------------------------------------------------------------------------------------
 Using git
