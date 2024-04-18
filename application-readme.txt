@@ -77,6 +77,42 @@ In the views.psy file, define the following function:
     def show_home_page(request):
         return HttpResponse("Welcome to IMMO!")
 
+--------------------------------------------------------------------------------------------------------------
+Using the database
+--------------------------------------------------------------------------------------------------------------
+
+If the application uses the database, then models have to be created. Initially, in the project's settings directory,
+a models.py file was generated when the project was created. Copy whatever models are required:
+
+First, create a models.py file in the application directory (/path/to/dev/immo_dev/immo_dev/welcome/models.py in this example):
+
+    touch models.py 
+
+From the /path/to/dev/immo_dev/immo_dev/models.py file, copy the required models, for example:
+
+    from django.db import models
+
+    class Contacts(models.Model):
+        firstName = models.CharField(primary_key=True, max_length=36, db_comment='First Name')
+        lastName = models.CharField(primary_key=True, max_length=36, db_comment='Last Name')
+        phone = models.CharField(primary_key=false, max_length=36, db_comment='Phone number')
+
+    class Meta:
+        managed = False
+        db_table = 'mytable'
+        unique_together = (('firstName', 'lastName'),)
+        db_table_comment = 'Contacts'
+
+
+Once the models are created, they must be migrated. From the project directory,
+
+    python manage.py migrate --fake-initial
+
+
+
+--------------------------------------------------------------------------------------------------------------
+Connecting a URL to the application (an application function actually)
+--------------------------------------------------------------------------------------------------------------
 
 If the application is to be executed from a URL, we need to assocaite that URL to a function
 implemented in the views.py file. We will associate the URL /home to the function show_home_page
@@ -115,6 +151,7 @@ After:
         path('admin/', admin.site.urls),
         path('home', include("welcome.urls"))
     ]
+
 
 The welcome page sould now be shown when the user writes the following URL in a browser:
 
