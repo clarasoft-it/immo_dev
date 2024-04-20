@@ -17,8 +17,13 @@ function init() {
 
 <body onload="init();">
 
-  <a href="http://localhost:8000/testPages">Back to test pages</a>
+  <ul>
+    <li><a href="http://localhost:8000/testPages/">Home</a></li>
+    <li><a href="http://localhost:8000/testPages/index_Owners.html">Back to Owners</a></li>
+  </ul>
+
   <h1>Owner: create</h1>
+
   <form method="post">{% csrf_token %}
   <table>
     <tr><td>First name</td><td><input type="text" id="fname" /></td></tr>

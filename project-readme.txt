@@ -257,7 +257,7 @@ An extra folder called misc is created under the project directory to hol miscel
 files such the database DDL script.
 
 ---------------------------------------------------------------------------------------------
-CORS headers an cross origin errors
+CORS headers and cross origin errors
 ---------------------------------------------------------------------------------------------
 
 The front end will be developped with ReactJS using nodejs. The nodejs instance

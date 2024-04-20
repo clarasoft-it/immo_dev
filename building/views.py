@@ -64,9 +64,10 @@ def buildings(request):
     response = {}
     response["enveloppe"] = {}
     response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-    response["buildings"] = {}
+    response["enveloppe"]["hResult"] = "0x00000000"
+    response["buildings"] = []
     for x in buildings:
-      response["buildings"][x.name] = {'id': x.id, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country}
+      response["buildings"].append({'id': x.id, 'name': x.name, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country})
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
