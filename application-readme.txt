@@ -6,7 +6,7 @@ Creating Django applications within the Django project
 A Django application is a program that runs within the Django framework. Django needs to know which applications
 are run under its framework. To create a Django application named welcome (move to /path/to/dev/immo_dev/immo_dev):
 
-    python manage.py startapp welcome
+    python3 manage.py startapp welcome
 
 This application will simply show a welcome page; a new directory will be created under the project directory:
 

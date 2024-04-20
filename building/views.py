@@ -3,6 +3,8 @@ from django.template import loader
 from .models import Building  
 from .models import BuildingOwner
 import json
+import uuid
+from datetime import datetime
 
 #=========================================================================================
 # route: /builings
@@ -15,14 +17,56 @@ import json
 
 def buildings(request):
 
-  buildings = Building.objects.all()
+  # depending on the HTTP method, we select, insert update or delete
 
-  response = {}
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["buildings"] = {}
-  for x in buildings:
-    response["buildings"][x.name] = {'id': x.id, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country}
+  if request.method == "POST":
+
+    #------------------------------------------------------------------
+    # insert a new building
+    # The building must have at least one unit and one owner
+    #------------------------------------------------------------------
+
+    Data = json.loads(request.body)
+  
+    buildingID = str(uuid.uuid4())
+
+    record = Building(id = buildingID, 
+                  name = Data["name"],    
+                  no = Data["no"],
+                  street = Data["street"],
+                  city = Data["city"],
+                  department = Data["province"],  
+                  zip = Data["zip"],
+                  country = Data["country"],
+                  crtu = 'Django-Immo',
+                  crtd = datetime.now(),
+                  updu = 'Django-Immo',
+                  updd = datetime.now())
+
+    record.save()
+
+    response = {}
+    response["enveloppe"] = {}
+    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["enveloppe"]["hResult"] = "0x00000000"
+    response["data"] = {}
+    response["data"]["buildingId"] = buildingID
+
+  elif request.method == "GET":
+
+    #------------------------------------------------------------------
+    # retrieve all buildings
+    # The building must have at least one unit and one owner
+    #------------------------------------------------------------------
+
+    buildings = Building.objects.all()
+
+    response = {}
+    response["enveloppe"] = {}
+    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["buildings"] = {}
+    for x in buildings:
+      response["buildings"][x.name] = {'id': x.id, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country}
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -52,7 +96,7 @@ def building_info(request, id):
   cur_unit = ""
   for x in units:
     if cur_unit != x.unit_name:
-      cur_unit = x.unit_name
+      cur_unit = x.unit_name 
       response["units"][x.unit_name] = {}
       response["units"][x.unit_name]["owners"] = []
       response["units"][x.unit_name]["owners"].append({'id': x.owner_id, 'first_name': x.owner.fname, 'last_name': x.owner.lname})

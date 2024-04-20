@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO Create Owner</title>
+    <script>
+
+function init() {
+    document.getElementById("fname").focus();
+}
+
+    </script>
+
+</head>
+
+<body onload="init();">
+
+  <a href="http://localhost:8000/testPages">Back to test pages</a>
+  <h1>Owner: create</h1>
+  <form method="post">{% csrf_token %}
+  <table>
+    <tr><td>First name</td><td><input type="text" id="fname" /></td></tr>
+    <tr><td>Last name</td><td><input type="text" id="lname" /></td></tr>
+    <tr><td>Address 1</td><td><input type="text" id="adr1" /></td></tr>
+    <tr><td>Address 2</td><td><input type="text" id="adr2" /></td></tr>
+    <tr><td>City</td><td><input type="text" id="city" /></td></tr>
+    <tr><td>Prov</td><td><input type="text" id="prov" /></td></tr>
+    <tr><td>Zip</td><td><input type="text" id="zip" /></td></tr>
+    <tr><td>Country</td><td><input type="text" id="country" /></td></tr>
+    <tr><td>Phone 1</td><td><input type="text" id="phone1" /></td></tr>
+    <tr><td>Phone 2</td><td><input type="text" id="phone2" /></td></tr>
+    <tr><td>Fax</td><td><input type="text" id="fax" /></td></tr>
+    <tr><td>Email</td><td><input type="text" id="email" /></td></tr>
+    <tr><td><input type="button" id="clear" value="clear" onclick="clearForm();"/></td><td><input type="button" id="submit" value="submit" onclick="submitInfo();"/></td></tr>
+  </table>
+  </form>
+
+  <div style="margin-top:20px;">
+    <textarea id="input" rows="10" cols="100" style="background-color: rgb(193, 247, 181);"></textarea>
+  </div>
+  <div style="margin-top:20px;">
+    <textarea id="result" rows="10" cols="100" style="background-color: rgb(193, 247, 181);"></textarea>
+  </div>
+
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+function submitInfo() {
+    data = {};
+
+    data.firstName = document.getElementById("fname").value;
+    data.lastName = document.getElementById("lname").value;
+    data.address1 = document.getElementById("adr1").value;
+    data.address2 = document.getElementById("adr2").value;
+    data.city = document.getElementById("city").value;
+    data.province = document.getElementById("prov").value;
+    data.zip = document.getElementById("zip").value;
+    data.country = document.getElementById("country").value;
+    data.phone1 = document.getElementById("phone1").value;
+    data.phone2 = document.getElementById("phone2").value;
+    data.fax = document.getElementById("fax").value;
+    data.email = document.getElementById("email").value;
+
+    document.getElementById("input").value = JSON.stringify(data);
+
+    xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("result").innerHTML =
+            this.responseText;
+        }
+    }
+
+    // This is toretrieve the CSRF token that must be returned
+    // to the server when a POST resquest is sent.
+
+    const csrftoken = getCookie('csrftoken');
+
+    //alert(csrftoken);
+
+    xhttp.open("POST", "http://localhost:8000/owners/");
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(JSON.stringify(data));    
+}
+
+function clearForm() {
+
+    document.getElementById("fname").value = "";
+    document.getElementById("lname").value = "";
+    document.getElementById("adr1").value = "";
+    document.getElementById("adr2").value = "";
+    document.getElementById("city").value = "";
+    document.getElementById("prov").value = "";
+    document.getElementById("zip").value = "";
+    document.getElementById("country").value = "";
+    document.getElementById("phone1").value = "";
+    document.getElementById("phone2").value = "";
+    document.getElementById("fax").value = "";
+    document.getElementById("email").value = "";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

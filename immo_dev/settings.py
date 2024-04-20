@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'building',
+    'owner',
+    'testPages',
 ]
 
 MIDDLEWARE = [
@@ -48,9 +51,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
 ]
 
 ROOT_URLCONF = 'immo_dev.urls'
+
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
 
 TEMPLATES = [
     {

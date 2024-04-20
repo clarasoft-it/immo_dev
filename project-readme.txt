@@ -257,6 +257,107 @@ An extra folder called misc is created under the project directory to hol miscel
 files such the database DDL script.
 
 ---------------------------------------------------------------------------------------------
+CORS headers an cross origin errors
+---------------------------------------------------------------------------------------------
+
+The front end will be developped with ReactJS using nodejs. The nodejs instance
+runs on localhost:3000. If a javascript retrieved from nodejs tries to reach this 
+Django application which runs on localhost:8000, Django server will not send 
+a Access-Control-Allow-Origin header; the brownser will then block the request. 
+
+We need to tell the browser that requests to localhost:8000 can be accepted from a javascript 
+retrieved from localhost:3000. What is needed is a python middleware that 
+returns the Access-Control-Allow-Origin HTTP response header to the browser when a javascript
+retrieved from origin localhost:3000 makes a request to localhost:8000. 
+
+A python package called jango-cors-headers inserts the required header when required. To install it:
+
+    python3 -m pip install django-cors-headers
+
+In the project settings.py file, add the following:
+
+    INSTALLED_APPS = [
+        ...,
+        "corsheaders",
+        ...,
+    ]
+
+    MIDDLEWARE = [
+        ...,
+        "corsheaders.middleware.CorsMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        ...,
+    ]
+
+CorsMiddleware should be placed as high as possible,
+Add the allowed origins (make sure this is what you really want).
+In this case, this is the nodejs instance that runs locally for
+ReactJS development:
+
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+    ]
+
+Now, requests to localhost:8000 from nodejs (localhost:3000) will be allowed by Django.
+
+---------------------------------------------------------------------------------------------
+Allowing for POST requests
+---------------------------------------------------------------------------------------------
+
+By default, POST requests are blocked by Django (it will return a HTTP 403 response - forbidden).
+To allow a page to submit POST requests from Javascript, the following can be done:
+
+In settings.py, add the following:
+
+    CSRF_USE_SESSIONS = False
+    CSRF_COOKIE_HTTPONLY = False
+
+This means we want the server to provide a CSRRF token in an HTTP  header. Next, from the 
+Javascript, that CFRS token must be returned to the server when the POST rrequest is submitted.
+The Javascript code must retrieve the token and send it to the server. To retrieve the
+token, the following Javascript function can be called:
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }   
+        return cookieValue;
+    }
+
+Then, the Ajax function can retrieve the token by callingg the function and sending the 
+POST request as in:
+
+    xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("result").innerHTML =
+            this.responseText;
+        }
+    }
+
+    // This is toretrieve the CSRF token that must be returned
+    // to the server when a POST resquest is sent.
+    
+    const csrftoken = getCookie('csrftoken');
+
+    xhttp.open("POST", "http://localhost:8000/some/route/");
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(JSON.stringify(data));    
+
+
+---------------------------------------------------------------------------------------------
 Using git
 ---------------------------------------------------------------------------------------------
 
@@ -345,11 +446,4 @@ This should result in the following messages:
         create mode 100644 requirements.txt
 
 
----------------------------------------------------------------------------------------------
-Pushing the project from git to github
----------------------------------------------------------------------------------------------
-
-First, we check SSH keys - this is used to authenticate to gitbug when we push the project.
-
-ls -al ~/.ssh
 
