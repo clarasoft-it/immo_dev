@@ -7,103 +7,179 @@ import uuid
 from datetime import datetime
 
 #=========================================================================================
-# route: /builings
+#=========================================================================================
 #
-# example:
-#
-# http://127.0.0.1:8000/buildings
+# API
 #
 #=========================================================================================
+#=========================================================================================
 
-def buildings(request):
+#=========================================================================================
+# route: /builings
+# handles GET and POST 
+# example: http://127.0.0.1:8000/buildings
+#=========================================================================================
 
-  # depending on the HTTP method, we select, insert update or delete
+def api_buildings(request):
 
   if request.method == "POST":
-
-    #------------------------------------------------------------------
-    # insert a new building
-    # The building must have at least one unit and one owner
-    #------------------------------------------------------------------
-
-    Data = json.loads(request.body)
-  
-    buildingID = str(uuid.uuid4())
-
-    record = Building(id = buildingID, 
-                  name = Data["name"],    
-                  no = Data["no"],
-                  street = Data["street"],
-                  city = Data["city"],
-                  department = Data["province"],  
-                  zip = Data["zip"],
-                  country = Data["country"],
-                  crtu = 'Django-Immo',
-                  crtd = datetime.now(),
-                  updu = 'Django-Immo',
-                  updd = datetime.now())
-
-    record.save()
-
-    response = {}
-    response["enveloppe"] = {}
-    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-    response["enveloppe"]["hResult"] = "0x00000000"
-    response["data"] = {}
-    response["data"]["buildingId"] = buildingID
-
+    return api_POST_building(request)
   elif request.method == "GET":
+    return api_GET_buildingEnum(request, id)
 
-    #------------------------------------------------------------------
-    # retrieve all buildings
-    # The building must have at least one unit and one owner
-    #------------------------------------------------------------------
+#=========================================================================================
+# route: /builings
+# method GET
+# example: http://127.0.0.1:8000/buildings
+#=========================================================================================
 
-    buildings = Building.objects.all()
+def api_GET_buildingEnum(request, id):
+    
+  buildings = Building.objects.all()
 
-    response = {}
-    response["enveloppe"] = {}
-    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-    response["enveloppe"]["hResult"] = "0x00000000"
-    response["buildings"] = []
-    for x in buildings:
-      response["buildings"].append({'id': x.id, 'name': x.name, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country})
+  response = {}
+  response["envelope"] = {}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["envelope"]["hResult"] = "0x00000000"
+  response["data"] = {}
+  response["data"]["buildings"] = qry_buildings()
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
+#=========================================================================================
+# route: /builings/<building_id>
+# method POST
+# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+#=========================================================================================
 
- #=========================================================================================
- # route: /builings/<building_id>
- #
- # example:
- #
- # http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
- #
- #=========================================================================================
+def api_POST_building(request):  
+    
+  #------------------------------------------------------------------
+  # insert a new building
+  # The building must have at least one unit and one owner
+  #------------------------------------------------------------------
 
-def building_info(request, id):
+  Data = json.loads(request.body)
+  
+  response = {}
+  response["envelope"] = {}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["data"] = {}
+
+  if Data["name"] == "":
+    hResult = '0x80010001'
+  elif Data["no"] == "":
+    hResult = '0x80010002'
+  elif Data["street"] == "":
+    hResult = '0x80010003'
+  elif Data["city"] == "":
+    hResult = '0x80010004'
+  elif Data["prov"] == "":
+    hResult = '0x80010005'
+  elif Data["zip"] == "":
+    hResult = '0x80010006'
+  elif Data["country"] == "":
+    hResult = '0x80010007'
+  else:
+
+    buildingID = str(uuid.uuid4())
+
+    record = Building(id = buildingID, 
+                    name = Data["name"],    
+                    no = Data["no"],
+                    street = Data["street"],
+                    city = Data["city"],
+                    department = Data["prov"],  
+                    zip = Data["zip"],
+                    country = Data["country"],
+                    crtu = 'Django-Immo',
+                    crtd = datetime.now(),
+                    updu = 'Django-Immo',
+                    updd = datetime.now())
+
+    record.save()
+
+    hResult = '0x00000000'
+    response["data"]["buildingId"] = buildingID
+
+  # endif
+
+  response["envelope"]["hResult"] = hResult
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# route: /builings/<building_id>
+# method GET
+# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+#=========================================================================================
+
+def api_GET_building(request, id):
+
+  response = {}
+  
+  response["enveloppe"] = {}
+  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["hResult"].hResult = '0x00000000'
+  response["data"] = qry_buildingInfo(id)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+#=========================================================================================
+#
+# QUERIES
+#
+#=========================================================================================
+#=========================================================================================
+
+#=========================================================================================
+# query: return list (array) of buildings
+#=========================================================================================
+
+def qry_buildings():
+
+  buildings = Building.objects.all()
+
+  info = []
+  for x in buildings:
+    info.append({'id': x.id, 'name': x.name, 'no': x.no, 'street': x.street, 'city': x.city, 'prov': x.department, 'zip': x.zip, 'country':x.country})
+
+  return info
+
+#=========================================================================================
+# query: return information on a building
+#=========================================================================================
+
+def qry_buildingInfo(id):
 
   building = Building.objects.get(id=id)
 
   units = BuildingOwner.objects.filter(building_id = id).all()
 
-  response = {}
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["id"] = building.id
-  response["name"] = building.name
-  response["units"] = {}
+  info = {}
+  info["id"] = building.id
+  info["name"] = building.name
+  info["no"] = building.no
+  info["street"] = building.street
+  info["city"] = building.city
+  info["zip"] = building.zip
+  info["prov"] = building.department
+  info["country"] = building.country
+  info["units"] = []
 
   cur_unit = ""
+  index = -1
   for x in units:
     if cur_unit != x.unit_name:
       cur_unit = x.unit_name 
-      response["units"][x.unit_name] = {}
-      response["units"][x.unit_name]["owners"] = []
-      response["units"][x.unit_name]["owners"].append({'id': x.owner_id, 'first_name': x.owner.fname, 'last_name': x.owner.lname})
+      index = index + 1
+      info["units"].append({"name":x.unit_name, "owners": []})
+      info["units"][index]["owners"].append({'id': x.owner_id, 'firstName': x.owner.fname, 'lastName': x.owner.lname})
     else:
-      response["units"][x.unit_name]["owners"].append({'id': x.owner_id, 'first_name': x.owner.fname, 'last_name': x.owner.lname})
+      n=0
+      info["units"][index]["owners"].append({'id': x.owner_id, 'firstName': x.owner.fname, 'lastName': x.owner.lname})
 
-  return HttpResponse(json.dumps(response), content_type="application/json")
+  return info
 
 

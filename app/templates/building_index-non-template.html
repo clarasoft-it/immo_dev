@@ -8,6 +8,10 @@
 
   <script>
 
+    function getBuilding(id) {
+      alert(this.dataset.building_id);
+    }
+
     function immo_CreatTable(elementID, jsonData) {
     
       // Get the container element where the table will be inserted
@@ -43,10 +47,37 @@
         let vals = Object.values(item);
         
         // Loop through the values and create table cells
-        vals.forEach((elem) => {
-            let td = document.createElement("td");
-            td.innerText = elem; // Set the value as the text of the table cell
-            tr.appendChild(td); // Append the table cell to the table row
+
+        vals.forEach((elem, index, arr) => {
+
+          let td = document.createElement("td");
+
+          switch (index) {
+
+            case 0:
+
+              break;  // ignore (don't show) building id
+
+            case 1:
+
+              anchor = document.createElement("a");
+              anchor.href = "#";
+              anchor.onclick = getBuilding;
+              anchor.setAttribute("data-building_id", arr[0]);
+              anchor.innerText = elem;
+              td.appendChild(anchor);
+
+              break;
+
+            default:
+
+              td.innerText = elem; // Set the value as the text of the table cell
+              break;
+
+          }
+
+          tr.appendChild(td); // Append the table cell to the table row
+          
         });
         // update button
         td = document.createElement("td");

@@ -158,3 +158,5 @@ The welcome page sould now be shown when the user writes the following URL in a 
     http://127.0.0.1:8000/home
 
 These are the basic steps to create a web application with Django. 
+
+

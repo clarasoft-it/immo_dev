@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO DEV - Owners</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+  <script>
+
+  </script>
+    
+</head>
+
+<body onload="init();">
+
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a href="http://localhost:8000/app/">Home</a>
+    <a href="http://localhost:8000/app/owner_index">Owners</a>
+    <a class="split" href="#contact">User</a>
+    <a class="split" href="#about">About</a>
+  </div>
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">Owner info: {{info.firstName}} {{info.lastName}}</span>
+  </div>
+
+  <div id="t_owner">
+  </div>
+
+</body>
+
+</html>

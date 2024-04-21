@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO DEV - Buildings</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+  <script>
+
+  function buildingUpdate(buildingID) {
+    alert(buildingID)
+  }
+
+  function buildingDelete(buildingID) {
+    alert(buildingID)
+  }
+
+  </script>
+
+<style>
+
+</style>
+
+</head>
+
+<body>
+
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a href="http://localhost:8000/app/">Home</a>
+    <a class="split" href="#contact">User</a>
+    <a class="split" href="#about">About</a>
+  </div>
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">Buildings</span>
+    <a class="fcc-btn" href="http://localhost:8000/app/building_create.html">New building</a>
+  </div>
+
+
+  <div id="t_buildings">
+    <table class="styled-table">
+    <thead><tr><th>Name</th>
+    <th>No</th>
+    <th>Street</th>
+    <th>City</th>
+    <th>Province</th>
+    <th>Zip</th>
+    <th>Country</th>
+    <th></th>
+    <th></th></tr></thead>
+    {% for building in buildings %}
+       <tr>
+          <td><a href="./building_info/{{building.id}}"  building_id="{{building.id}}" onclick="showBuildingInfo(this)">{{building.name}}</a></td>
+          <td>{{building.no}}</td>
+          <td>{{building.street}}</td>
+          <td>{{building.city}}</td>
+          <td>{{building.prov}}</td>
+          <td>{{building.zip}}</td>
+          <td>{{building.country}}</td>
+          <td><input type="button" value="update" onclick="buildingUpdate('{{building.id}})')" /></td>
+          <td><input type="button" value="delete" onclick="buildingUpdate('{{building.id}})')" /></td>
+        </tr>
+    {% endfor %}
+    </table>
+  </div>
+
+</body>
+
+</html>

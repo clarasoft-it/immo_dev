@@ -7,30 +7,87 @@ import uuid
 from datetime import datetime
 
 #=========================================================================================
-# route: /owners
+#=========================================================================================
 #
-# example:
-#
-# http://127.0.0.1:8000/owners
+# API
 #
 #=========================================================================================
+#=========================================================================================
 
-def owners(request):
+#=========================================================================================
+# route: /owners
+# handles GET and POST
+# example: http://127.0.0.1:8000/owners
+#=========================================================================================
 
-  # depending on the HTTP method, we select, insert update or delete
+def api_owners(request):
 
   if request.method == "POST":
+    return api_POST_building(request)
+  elif request.method == "GET":
+    return api_GET_ownerEnum()
 
-    #------------------------------------------------------------------
-    # insert a new building
-    # The building must have at least one unit and one owner
-    #------------------------------------------------------------------
+#=========================================================================================
+# route: /owners
+# method GET
+# example:  http://127.0.0.1:8000/owners
+#=========================================================================================
+
+def api_GET_ownerEnum():
     
-    Data = json.loads(request.body)
+  #------------------------------------------------------------------
+  # retrieve all owners
+  #------------------------------------------------------------------
 
-    #------------------------------------------------------------------    
-    # Error checking
-    #------------------------------------------------------------------    
+  response = {}
+  response["envelope"] = {}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["envelope"]["hResult"] = "0x00000000"
+  response["data"] = {}
+  response["data"]["owners"] = qry_owners()
+  
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# route: /builings/<building_id>
+# method POST
+# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+#=========================================================================================
+
+def api_POST_building(request):  
+    
+  #------------------------------------------------------------------
+  # insert a new owner
+  #------------------------------------------------------------------
+    
+  Data = json.loads(request.body)
+
+  #------------------------------------------------------------------    
+  # Error checking
+  #------------------------------------------------------------------    
+
+  response = {}
+  response["envelope"] = {}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["data"] = {}
+
+  if Data["firstName"] == "":
+    hResult = '0x80010001'
+  elif Data["lastName"] == "":
+    hResult = '0x80010002'
+  elif Data["address1"] == "":
+    hResult = '0x80010003'
+  elif Data["address2"] == "":
+    hResult = '0x80010004'
+  elif Data["city"] == "":
+    hResult = '0x80010005'
+  elif Data["prov"] == "":
+    hResult = '0x80010006'
+  elif Data["zip"] == "":
+    hResult = '0x80010007'
+  elif Data["country"] == "":
+    hResult = '0x80010008'
+  else:
 
     #------------------------------------------------------------------    
     # Insert owner in database
@@ -40,85 +97,89 @@ def owners(request):
     contactID = str(uuid.uuid4())
 
     record = Owner(id = ownerID,
-                   contact_id = contactID,
-                   fname = Data["firstName"],
-                   lname = Data["lastName"],
-                   status = '0',
-                   crtu = 'Django-Immo',
-                   crtd = datetime.now(),
-                   updu = 'Django-Immo',
-                   updd = datetime.now())
+                 contact_id = contactID,
+                 fname = Data["firstName"],
+                 lname = Data["lastName"],
+                 status = '0',
+                 crtu = 'Django-Immo',
+                 crtd = datetime.now(),
+                 updu = 'Django-Immo',
+                 updd = datetime.now())
 
     record.save()
 
     record = Contact(id = contactID, 
-                  address1 = Data["address1"],
-                  address2 = Data["address2"],
-                  city = Data["city"],
-                  department = Data["province"],  
-                  country = Data["country"],
-                  zip = Data["zip"],
-                  phone1 = Data["phone1"],
-                  phone2 = Data["phone2"],
-                  fax = Data["fax"],
-                  email = Data["email"],
-                  crtu = 'Django-Immo',
-                  crtd = datetime.now(),
-                  updu = 'Django-Immo',
-                  updd = datetime.now())
+                address1 = Data["address1"],
+                address2 = Data["address2"],
+                city = Data["city"],
+                department = Data["prov"],  
+                country = Data["country"],
+                zip = Data["zip"],
+                phone1 = Data["phone1"],
+                phone2 = Data["phone2"],
+                fax = Data["fax"],
+                email = Data["email"],
+                crtu = 'Django-Immo',
+                crtd = datetime.now(),
+                updu = 'Django-Immo',
+                updd = datetime.now())
     
     record.save()
+    hResult = '0x00000000'
 
     #------------------------------------------------------------------    
-    # Create response
+    # Add response creation info
     #------------------------------------------------------------------    
 
-    response = {}
-    response["enveloppe"] = {}
-    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-    response["enveloppe"]["hResult"] = "0x00000000"
-    response["data"] = {}
     response["data"]["ownerId"] = ownerID
     response["data"]["contactId"] = contactID
- 
-  elif request.method == "GET":
 
-    #------------------------------------------------------------------
-    # retrieve all owners
-    #------------------------------------------------------------------
+    response["envelope"]["hResult"] = hResult
 
-    owners = Owner.objects.all()
-
-    response = {}
-    response["enveloppe"] = {}
-    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-    response["owners"] = []
-    for x in owners:
-      response["owners"].append({'id':x.id, 'firstName': x.fname, 'lastName': x.lname})
-  
   return HttpResponse(json.dumps(response), content_type="application/json")
 
- #=========================================================================================
- # route: /owners/<building_id>
- #
- # example:
- #
- # http://127.0.0.1:8000/owners/ae66f43d-50db-4ee7-806f-59e220c23e7b
- #
- #=========================================================================================
+#=========================================================================================
+# route: /owners/<owner_id>
+# Method: POST
+# example: http://127.0.0.1:8000/owners/ae66f43d-50db-4ee7-806f-59e220c23e7b
+#=========================================================================================
 
-def owner_info(request, id):
+def api_GET_owner(request, id):
+
+  response = {}
+  
+  response["enveloppe"] = {}
+  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["hResult"].hResult = '0x00000000'
+  response["data"] = qry_owners(id)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# query: return list (array) of owners
+#=========================================================================================
+
+def qry_owners():
+
+  owners = Owner.objects.all()
+
+  info = []
+  for x in owners:
+    info.append({'id':x.id, 'firstName': x.fname, 'lastName': x.lname})
+
+  return info
+
+#=========================================================================================
+# query: return information on an owner
+#=========================================================================================
+
+def qry_ownerInfo(id):
 
   owner = Owner.objects.get(id=id)
 
-  response = {}
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["id"] = owner.id
-  response["contactId"] = owner.contact_id
-  response["firstName"] = owner.fname
-  response["lastName"] = owner.lname
+  info = {}
+  info["id"] = owner.id
+  info["firstName"] = owner.fname
+  info["lastName"] = owner.lname
 
-  return HttpResponse(json.dumps(response), content_type="application/json")
-
-
+  return info

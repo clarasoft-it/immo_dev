@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO (DEV) home</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+
+</head>
+
+<body>
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a class="split" href="#contact">User</a>
+    <a class="split" href="#about">About</a>
+  </div>
+
+  <ul class="no-bullets">
+    <!--
+    <li><a href="./owner_index.html">Owners</a></li>
+    -->
+    <li><div style="padding:20px;"><a class="fcc-btn" href="./building_index">Buildings</a></div></li>
+    <li><div style="padding:20px;"><a class="fcc-btn" href="./owner_index">Owners</a></div></li>
+  </ul>
+
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO DEV - Buildings</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+
+  <script>
+
+  </script>
+    
+</head>
+
+<body onload="init();">
+
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a href="http://localhost:8000/app/">Home</a>
+    <a href="http://localhost:8000/app/building_index">Buildings</a>
+    <a class="split" href="#contact">User</a>
+    <a class="split" href="#about">About</a>
+  </div>
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">Building info: {{info.name}}</span>
+  </div>
+
+  <div id="t_building">
+    <table class="styled-table">
+      <tr><td>{{info.no}} {{info.street}}</td></tr>
+      <tr><td>{{info.city}}</td></tr>
+      <tr><td>{{info.prov}}</td></tr>
+      <tr><td>{{info.zip}}</td></tr>
+      <tr><td>{{info.country}}</td></tr>
+    </table>
+  </div>
+
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">Units</span>
+  </div>
+
+  <div style="margin-top:30px;">
+    <a class="fcc-btn" href="#">New unit</a>
+  </div>
+  <div class="panel_grid">
+    <table class="styled-table">
+      {% for unit in info.units %}
+        <tr>
+          <td><td>{{unit.name}}</td>
+          <td>
+            <ul class="no-bullets">
+            {% for owner in unit.owners %}
+              <li><a href="#">{{owner.firstName}} {{owner.lastName}}</a></li>      
+            {% endfor %}
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+</div>
+
+</body>
+
+</html>

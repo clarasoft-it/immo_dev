@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO DEV - Owners</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+
+  <script>
+
+  function ownerUpdate(ownerID) {
+    alert(ownerID)
+  }
+
+  function ownerDelete(ownerID) {
+    alert(ownerID)
+  }
+
+  </script>
+    
+</head>
+
+<body>
+
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a href="http://localhost:8000/app/">Home</a>
+    <a class="split" href="#contact">User</a>
+    <a class="split" href="#about">About</a>
+  </div>
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">Owners</span>
+    <a class="fcc-btn" href="http://localhost:8000/app/owner_create.html">New owner</a>
+  </div>
+
+  <div id="t_owners">
+    <table class="styled-table">
+
+      <thead><tr><th>Name</th>
+        <th></th>
+        <th></th></tr></thead>
+    
+    {% for owner in owners %}
+       <tr>
+          <td><a href="./owner_info/{{owner.id}}"  owner_id="{{owner.id}}" onclick="showOwnerInfo(this)">{{owner.firstName}} {{owner.lastName}}</a></td>
+          <td><input type="button" value="update" onclick="buildingUpdate('{{owner.id}})')" /></td>
+          <td><input type="button" value="delete" onclick="buildingUpdate('{{owner.id}})')" /></td>
+        </tr>
+    {% endfor %}
+    </table>
+  </div>
+
+</body>
+
+</html>
