@@ -150,8 +150,8 @@ def api_GET_owner(request, id):
   
   response["enveloppe"] = {}
   response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["hResult"].hResult = '0x00000000'
-  response["data"] = qry_owners(id)
+  response["hResult"] = '0x00000000'
+  response["data"] = qry_ownerInfo(id)
 
   return HttpResponse(json.dumps(response), content_type="application/json")
 
