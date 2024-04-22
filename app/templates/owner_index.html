@@ -27,27 +27,27 @@
 
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a href="http://localhost:8000/app/">Home</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
+    <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+    <a class="split" href="#contact">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Owners</span>
-    <a class="fcc-btn" href="http://localhost:8000/app/owner_create.html">New owner</a>
+    <span class="main-title">{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</span>
+    <a class="fcc-btn" href="./owner_create.html">{{captions.COMMON.K_91a0e783_bd48_4fbc_bc6e_ff01a02209ed.caption}}</a>
   </div>
 
   <div id="t_owners">
     <table class="styled-table">
 
-      <thead><tr><th>Name</th>
+      <thead><tr><th>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</th>
         <th></th>
         <th></th></tr></thead>
     
     {% for owner in owners %}
        <tr>
           <td><a href="./owner_info/{{owner.id}}"  owner_id="{{owner.id}}" onclick="showOwnerInfo(this)">{{owner.firstName}} {{owner.lastName}}</a></td>
-          <td><input type="button" value="update" onclick="buildingUpdate('{{owner.id}})')" /></td>
-          <td><input type="button" value="delete" onclick="buildingUpdate('{{owner.id}})')" /></td>
+          <td><input type="button" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="buildingUpdate('{{owner.id}})')" /></td>
+          <td><input type="button" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="buildingUpdate('{{owner.id}})')" /></td>
         </tr>
     {% endfor %}
     </table>

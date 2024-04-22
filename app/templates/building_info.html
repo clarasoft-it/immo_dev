@@ -18,13 +18,13 @@
 
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a href="http://localhost:8000/app/">Home</a>
-    <a href="http://localhost:8000/app/building_index">Buildings</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
+    <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+    <a href="/app/{{captions.langid}}/building_index">{{captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption}}</a>
+    <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Building info: {{info.name}}</span>
+    <span class="main-title">{{captions.COMMON.K_e18b5642_8672_43de_8b6c_4bbaf6201e1f.caption}}: {{info.name}}</span>
   </div>
 
   <div id="t_building">
@@ -38,17 +38,21 @@
   </div>
 
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Units</span>
+    <span class="main-title">{{captions.COMMON.K_e2a528b2_1987_45a6_964e_da1f6cacfd8f.caption}}</span>
   </div>
 
   <div style="margin-top:30px;">
-    <a class="fcc-btn" href="#">New unit</a>
+    <a class="fcc-btn" href="#">{{captions.COMMON.K_d49656c0_6b46_42f3_8db1_b7d4d097e6cf.caption}}</a>
   </div>
   <div class="panel_grid">
     <table class="styled-table">
+      <thead>
+        <th>{{captions.COMMON.K_3169519d_be35_4edd_89f2_c5044fbb8171.caption}}</th>
+        <th>{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</th>
+      </thead>
       {% for unit in info.units %}
         <tr>
-          <td><td>{{unit.name}}</td>
+          <td>{{unit.name}}</td>
           <td>
             <ul class="no-bullets">
             {% for owner in unit.owners %}

@@ -50,3 +50,5 @@ insert into building_owner values('ae66f43d-50db-4ee7-806f-59e220c23e7b', '4', '
 insert into building_owner values('ae66f43d-50db-4ee7-806f-59e220c23e7b', '6', '9a94f3e2-73d7-4e9b-bef0-cc46b903fb01', current_date, '0001-01-01', '1', 'Clara', current_timestamp, 'Clara', current_timestamp);
 
 
+
+

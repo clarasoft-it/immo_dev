@@ -5,9 +5,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IMMO DEV - Owners</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">  
-  <script>
+  <title>IMMO (DEV)</title>
+<script>
 
   </script>
     
@@ -17,13 +17,13 @@
 
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a href="http://localhost:8000/app/">Home</a>
-    <a href="http://localhost:8000/app/owner_index">Owners</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
-  </div>
+    <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+    <a href="/app/{{captions.langid}}/owner_index">{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</a>
+    <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
+    </div>
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Owner info: {{info.firstName}} {{info.lastName}}</span>
+    <span class="main-title">{{ captions.COMMON.K_92389dc5_a682_416c_bab5_d714888cab3c.caption }}: {{info.firstName}} {{info.lastName}}</span>
   </div>
 
   <div id="t_owner">

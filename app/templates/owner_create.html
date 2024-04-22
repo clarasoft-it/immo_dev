@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IMMO Create Owner</title>
+  <title>IMMO (DEV)</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">  
 
   <script>
@@ -23,26 +23,29 @@ function init() {
 
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a href="http://localhost:8000/app/">Home</a>
-    <a href="http://localhost:8000/app/owner_index">Owners</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
+    <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+    <a href="/app/{{captions.langid}}/owner_index">{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</a>
+    <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
 
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Owner: create new owner</span>
+    <span class="main-title">{{captions.COMMON.K_9b1c952d_a849_49df_9bee_a6bc6b2fa9d5.caption}}</span>
   </div>
 
   <div style="margin-top:15px;">
   <table class="styled-table">
-    <tr><td>First name</td><td><input type="text" id="firstName" /></td><td>Phone 1</td><td><input type="text" id="phone1" /></td></tr>
-    <tr><td>Last name</td><td><input type="text" id="lastName" /></td><td>Phone 2</td><td><input type="text" id="phone2" /></td></tr>
-    <tr><td>Address 1</td><td><input type="text" id="address1" /></td><td>Fax</td><td><input type="text" id="fax" /></td></tr>
-    <tr><td>Address 2</td><td><input type="text" id="address2" /></td><td>Email</td><td><input type="text" id="email" /></td>
-    <tr><td>City</td><td><input type="text" id="city" /></td><td></td><td><input type="button" id="clear" value="clear" onclick="clearForm();"/>&nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="submit" onclick="submitInfo();"/></td></tr>
-    <tr><td>Prov</td><td><input type="text" id="prov" /></td></tr>
-    <tr><td>Zip</td><td><input type="text" id="zip" /></td></tr>
-    <tr><td>Country</td><td><input type="text" id="country" /></td></tr>
+    <tr><td>{{captions.COMMON.K_d1cde139_858c_4c72_b243_6c92fd7d761e.caption}}</td><td><input type="text" id="firstName" /></td><td>{{captions.COMMON.K_aac6fb8d_7fd9_4503_9adc_2d83fcbd3f7e.caption}}</td><td><input type="text" id="phone1" /></td></tr>
+    <tr><td>{{captions.COMMON.K_65ec6d29_055c_4818_9749_21fdf0d3141d.caption}}</td><td><input type="text" id="lastName" /></td><td>{{captions.COMMON.K_7ffb065f_78da_49e9_83c8_7bb42b42fa48.caption}}</td><td><input type="text" id="phone2" /></td></tr>
+    <tr><td>{{captions.COMMON.K_c67e340b_ee9f_4c1c_836f_9b956ba1863c.caption}}</td><td><input type="text" id="address1" /></td><td>{{captions.COMMON.K_8d9c52a2_9b63_41b0_b580_7708966c3af3.caption}}</td><td><input type="text" id="fax" /></td></tr>
+    <tr><td>{{captions.COMMON.K_e7ba8bd3_0264_4c35_94f7_3e0cfb2f79c4.caption}}</td><td><input type="text" id="address2" /></td><td>{{captions.COMMON.K_f5f21a35_515b_43f5_ae30_26f7f331def8.caption}}</td><td><input type="text" id="email" /></td>
+    <tr><td>{{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}</td><td><input type="text" id="city" /></td>
+        <td></td>
+        <td><input type="button" id="clear" value="{{captions.COMMON.K_5eb6b2f8_f8c6_41f4_a6bf_22bf46c54ce8.caption}}" onclick="clearForm();"/>&nbsp;&nbsp;&nbsp;
+            <input type="button" id="submit" value="{{captions.COMMON.K_ff18fa4d_3b66_444e_adcf_0df430cc00a2.caption}}" onclick="submitInfo();"/></td></tr>
+    <tr><td>{{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}</td><td><input type="text" id="prov" /></td></tr>
+    <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><input type="text" id="zip" /></td></tr>
+    <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><input type="text" id="country" /></td></tr>
   </table>
 
 </div>

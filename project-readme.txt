@@ -445,5 +445,7 @@ This should result in the following messages:
         create mode 100644 project-readme.txt
         create mode 100644 requirements.txt
 
+To push on github:
 
+git push https://github.com/clarasoft-it/immo_dev
 

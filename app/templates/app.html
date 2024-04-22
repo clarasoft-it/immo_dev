@@ -6,26 +6,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IMMO (DEV) home</title>
+  <title>IMMO (DEV) {{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">  
 
 </head>
 
 <body>
+  
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
+    <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
 
   <ul class="no-bullets">
-    <!--
-    <li><a href="./owner_index.html">Owners</a></li>
-    -->
-    <li><div style="padding:20px;"><a class="fcc-btn" href="./building_index">Buildings</a></div></li>
-    <li><div style="padding:20px;"><a class="fcc-btn" href="./owner_index">Owners</a></div></li>
+    <li><div style="padding:20px;"><a class="fcc-btn" href="./{{captions.langid}}/building_index">{{captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption}}</a></div></li>
+    <li><div style="padding:20px;"><a class="fcc-btn" href="./{{captions.langid}}/owner_index">{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</a></div></li>
   </ul>
 
 </body>
 
 </html>
+

@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IMMO DEV - Buildings</title>
+  <title>IMMO DEV - {{ captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption }}</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">  
 
   <script>
@@ -23,25 +23,26 @@ function init() {
 
   <div class="topnav">
     <a class="anchor-inactive" href="#">IMMO-DEV</a>
-    <a href="http://localhost:8000/app/">Home</a>
-    <a href="http://localhost:8000/app/building_index">Buildings</a>
-    <a class="split" href="#contact">User</a>
-    <a class="split" href="#about">About</a>
+    <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+    <a href="/app/{{captions.langid}}/building_index">{{captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption}}</a>
+    <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+    <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">Building: create new building</span>
+    <span class="main-title">{{captions.COMMON.K_ab3381b4_e2e5_47b6_8c29_c0c45971d8de.caption}}</span>
   </div>
 
   <div style="margin-top:15px;">
   <table class="styled-table">
-    <tr><td>Name</td><td><input type="text" id="name" /></td></tr>
-    <tr><td>No</td><td><input type="text" id="no" /></td></tr>
-    <tr><td>Street</td><td><input type="text" id="street" /></td></tr>
-    <tr><td>City</td><td><input type="text" id="city" /></td></tr>
-    <tr><td>Prov</td><td><input type="text" id="prov" /></td></tr>
-    <tr><td>Zip</td><td><input type="text" id="zip" /></td></tr>
-    <tr><td>Country</td><td><input type="text" id="country" /></td></tr>
-    <tr><td></td><td><input type="button" id="clear" value="clear" onclick="clearForm();"/>&nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="submit" onclick="submit();"/></td></tr>
+    <tr><td>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</td><td><input type="text" id="name" /></td></tr>
+    <tr><td>{{captions.COMMON.K_f5e91168_412e_4048_ab4a_e37602f6653f.caption}}</td><td><input type="text" id="no" /></td></tr>
+    <tr><td>{{captions.COMMON.K_d4ec6ac2_c5e5_4e9f_9267_0b94d95ffde6.caption}}</td><td><input type="text" id="street" /></td></tr>
+    <tr><td>{{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}</td><td><input type="text" id="city" /></td></tr>
+    <tr><td>{{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}</td><td><input type="text" id="prov" /></td></tr>
+    <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><input type="text" id="zip" /></td></tr>
+    <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><input type="text" id="country" /></td></tr>
+    <tr><td></td><td><input type="button" id="clear" value="{{captions.COMMON.K_5eb6b2f8_f8c6_41f4_a6bf_22bf46c54ce8.caption}}" onclick="clearForm();"/>
+      &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_ff18fa4d_3b66_444e_adcf_0df430cc00a2.caption}}" onclick="submit();"/></td></tr>
   </table>
 
   <div style="margin-top:20px;">
