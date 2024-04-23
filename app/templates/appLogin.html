@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO (DEV)</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+
+  <script>
+function init() {
+  document.getElementById("pwd").focus();
+}    
+  </script>
+</head>
+
+<body onload="init();"">
+  
+  <div class="topnav">
+    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+  </div>
+
+  <table>
+    <tr>
+      <td>{{captions.COMMON.K_0cb3e007_b46c_458d_8248_6b775ffc5ab4.caption}}</td><td><input type="text" id="pwd" /></td>
+    </tr>
+    <tr>
+      <td>{{captions.COMMON.K_fef6ad3b_d8bb_4ad1_9a67_005c3ef38296.caption}}</td><td><input type="text" id="pwd" /></td>
+    </tr>
+    <tr>
+      <td></td><td><input type="button" value="{{captions.COMMON.K_19863e4a_63ba_44e8_85da_28d37dce7ae1.caption}}" id="login" onclick="window.location.href = '../{{langid}}'"/></td>
+    </tr>
+  </table>
+
+</body>
+
+</html>
+

@@ -1,11 +1,31 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from tools.tools import *
 from owner.views import qry_owners
 from owner.views import qry_ownerInfo
 from building.views import qry_buildings
 from building.views import qry_buildingInfo
-from app.models import Caption
+
 import json
+
+
+#-------------------------------------------------------------------------------------
+# Application welcome page
+#-------------------------------------------------------------------------------------
+
+def AppIndex(request):
+
+  return render(request, "appIndex.html")
+
+#-------------------------------------------------------------------------------------
+# Application login page
+#-------------------------------------------------------------------------------------
+
+def AppLogin(request, langid):
+
+  captions = T_GetCaptions("COMMON", langid) 
+
+  return render(request, "appLogin.html", {"langid": langid, "captions":captions})
 
 #-------------------------------------------------------------------------------------
 # Application main page
@@ -13,7 +33,7 @@ import json
 
 def App(request, langid):
 
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
 
   return render(request, "app.html", {"captions":captions})
 
@@ -23,21 +43,21 @@ def App(request, langid):
 
 def AppOwnerIndex(request, langid):
   
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
   ownerSet = qry_owners()
 
   return render(request, "owner_index.html", {"captions":captions, "owners": ownerSet})
 
 def AppOwnerInfo(request, langid, id):
   
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
   ownerInfo = qry_ownerInfo(id)
 
   return render(request, "owner_info.html", {"captions":captions, "info": ownerInfo})
 
 def AppOwnerCreate(request, langid):
   
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
 
   return render(request, "owner_create.html", {"captions":captions})
 
@@ -47,23 +67,24 @@ def AppOwnerCreate(request, langid):
 
 def AppBuildingIndex(request, langid):
 
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
   buildingSet = qry_buildings()
 
   return render(request, "building_index.html", {"captions": captions, "buildings": buildingSet})
 
 def AppBuildingInfo(request, langid, id):
   
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
   buildingInfo = qry_buildingInfo(id)
 
   return render(request, "building_info.html", {"captions": captions, "info": buildingInfo})
 
 def AppBuildingCreate(request, langid):
   
-  captions = GetCaptions("COMMON", langid) 
+  captions = T_GetCaptions("COMMON", langid) 
+  messages = T_GetCaptions("BUILDINGS_API_POST", langid) 
 
-  return render(request, "building_create.html", {"captions": captions})
+  return render(request, "building_create.html", {"captions": captions, "messages": messages})
 
 def AppBuildingUpdadte(request):
     return render(request, "building_update.html")
@@ -71,20 +92,8 @@ def AppBuildingUpdadte(request):
 def AppBuildingDelete(request):
     return render(request, "building_delete.html")
 
-#-----------------------------------------------------------------------
-# GetCations - returns the captions for an application ID and language
-#-----------------------------------------------------------------------
+def AppUnitCreate(request, langid):
 
-def GetCaptions(appid, langid):
-  
-  captionSet = Caption.objects.filter(app=appid, lang=langid)
-    
-  captions = {}
-  captions["langid"] = langid
-  captions["COMMON"] = {}
-  
-  for x in captionSet:
-    # we need to repalce hyphens to undderscore to prevent parse errors in template
-    captions["COMMON"]["K_" + x.id.replace("-", "_")] = {"caption": x.caption}
- 
-  return captions
+  captions = T_GetCaptions("COMMON", langid) 
+  return render(request, "unit_create.html", {"captions": captions})
+

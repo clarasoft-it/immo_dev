@@ -8,6 +8,7 @@ Insert into application values('IMMO_BUILDINGS', 'IMMO buildings', 'IMMO buildin
 Insert into application values('IMMO_BUILDING_INFO', 'IMMO building info', 'IMMO building information page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('IMMO_OWNERS', 'IMMO owners', 'IMMO owners page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('IMMO_OWNER_INFO', 'IMMO owner info', 'IMMO owner information page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('BUILDINGS_ADD', 'IMMO owner info', 'IMMO owner information page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'eng', 'Home', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'fre', 'Accueil', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -73,3 +74,30 @@ Insert into caption values('8d9c52a2-9b63-41b0-b580-7708966c3af3', 'COMMON', 'en
 Insert into caption values('8d9c52a2-9b63-41b0-b580-7708966c3af3', 'COMMON', 'fre', 'Fax', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('f5f21a35-515b-43f5-ae30-26f7f331def8', 'COMMON', 'eng', 'Email', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('f5f21a35-515b-43f5-ae30-26f7f331def8', 'COMMON', 'fre', 'Courriel', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0cb3e007-b46c-458d-8248-6b775ffc5ab4', 'COMMON', 'eng', 'User', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0cb3e007-b46c-458d-8248-6b775ffc5ab4', 'COMMON', 'fre', 'Utilisateur', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('fef6ad3b-d8bb-4ad1-9a67-005c3ef38296', 'COMMON', 'eng', 'Password', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('fef6ad3b-d8bb-4ad1-9a67-005c3ef38296', 'COMMON', 'fre', 'Mot de passe', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('19863e4a-63ba-44e8-85da-28d37dce7ae1', 'COMMON', 'eng', 'Login', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('19863e4a-63ba-44e8-85da-28d37dce7ae1', 'COMMON', 'fre', 'Accéder', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'eng', 'Building added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'fre', 'L''immeuble a été ajouté avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDINGS_API_POST', 'eng', 'Missing name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDINGS_API_POST', 'fre', 'Le nom est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010002', 'BUILDINGS_API_POST', 'eng', 'Missing street number', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010002', 'BUILDINGS_API_POST', 'fre', 'Le numéro de rue est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010003', 'BUILDINGS_API_POST', 'eng', 'Missing street name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010003', 'BUILDINGS_API_POST', 'fre', 'Le nom de rue est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010004', 'BUILDINGS_API_POST', 'eng', 'Missing city name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010004', 'BUILDINGS_API_POST', 'fre', 'Le nom de municipalité est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010005', 'BUILDINGS_API_POST', 'eng', 'Missing province/state/department name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010005', 'BUILDINGS_API_POST', 'fre', 'Le nom de province/état/département est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010006', 'BUILDINGS_API_POST', 'eng', 'Missing zip code', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010006', 'BUILDINGS_API_POST', 'fre', 'Le code postal est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010007', 'BUILDINGS_API_POST', 'eng', 'Missing country name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010007', 'BUILDINGS_API_POST', 'fre', 'Le nom de pays est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDINGS_API_POST', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDINGS_API_POST', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020002', 'BUILDINGS_API_POST', 'eng', 'Database error - integrity', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020002', 'BUILDINGS_API_POST', 'fre', 'Erreur base de données - intégrité', 'IMMO', current_timestamp, 'IMMO', current_timestamp);

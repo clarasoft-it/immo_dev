@@ -23,7 +23,7 @@ from datetime import datetime
 def api_owners(request):
 
   if request.method == "POST":
-    return api_POST_building(request)
+    return api_POST_owner(request)
   elif request.method == "GET":
     return api_GET_ownerEnum()
 
@@ -49,12 +49,12 @@ def api_GET_ownerEnum():
   return HttpResponse(json.dumps(response), content_type="application/json")
 
 #=========================================================================================
-# route: /builings/<building_id>
+# route: /owners/<owner_id>
 # method POST
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+# example: http://127.0.0.1:8000/owners/ae66f43d-50db-4ee7-806f-59e220c23e7b
 #=========================================================================================
 
-def api_POST_building(request):  
+def api_POST_owner(request):  
     
   #------------------------------------------------------------------
   # insert a new owner

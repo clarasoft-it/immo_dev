@@ -4,7 +4,9 @@ from .models import Building
 from .models import BuildingOwner
 import json
 import uuid
+import django.db
 from datetime import datetime
+from tools.tools import *
 
 #=========================================================================================
 #=========================================================================================
@@ -97,9 +99,14 @@ def api_POST_building(request):
                     updu = 'Django-Immo',
                     updd = datetime.now())
 
-    record.save()
+    try:
+      record.save()
+      hResult = '0x00000000'
+    except django.db.IntegrityError:
+      hResult = '0x80020002'
+    except django.db.DatabaseError:
+      hResult = '0x80020001'
 
-    hResult = '0x00000000'
     response["data"]["buildingId"] = buildingID
 
   # endif
