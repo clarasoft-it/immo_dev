@@ -5,7 +5,7 @@ from owner.views import qry_owners
 from owner.views import qry_ownerInfo
 from building.views import qry_buildings
 from building.views import qry_buildingInfo
-
+from owner.views import *
 import json
 
 
@@ -77,6 +77,8 @@ def AppBuildingInfo(request, langid, id):
   captions = T_GetCaptions("COMMON", langid) 
   buildingInfo = qry_buildingInfo(id)
 
+  # get building owners
+  
   return render(request, "building_info.html", {"captions": captions, "info": buildingInfo})
 
 def AppBuildingCreate(request, langid):
@@ -92,8 +94,17 @@ def AppBuildingUpdadte(request):
 def AppBuildingDelete(request):
     return render(request, "building_delete.html")
 
-def AppUnitCreate(request, langid):
-
+def AppUnitCreate(request, langid, building_id):
+  
   captions = T_GetCaptions("COMMON", langid) 
-  return render(request, "unit_create.html", {"captions": captions})
+  messages = T_GetCaptions("UNITS_API_POST", langid) 
+  formMessages = T_GetCaptions("UNITS_FORM", langid) 
+  
+  buildingInfo = qry_buildingInfo(id=building_id)
+  owners = qry_owners()
 
+  building = {}
+  building["id"] = building_id
+  building["name"] = buildingInfo["name"]
+
+  return render(request, "unit_create.html", {"captions": captions, "messages": messages, "formMessages": formMessages, "building": building, "owners": owners})

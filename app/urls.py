@@ -11,6 +11,6 @@ urlpatterns = [
     path('app/<str:langid>/building_index', views.AppBuildingIndex, name='AppBuildingIndex'),
     path('app/<str:langid>/building_info/<str:id>', views.AppBuildingInfo, name='AppBuildingInfo'),
     path('app/<str:langid>/building_create.html', views.AppBuildingCreate, name='AppBuildingCreate'),
-    path('app/<str:langid>/unit_create.html', views.AppUnitCreate, name='AppUnitCreate'),
+    path('app/<str:langid>/<str:building_id>/unit_create.html', views.AppUnitCreate, name='AppUnitCreate'),
 
 ]

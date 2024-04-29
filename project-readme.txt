@@ -192,7 +192,7 @@ can be started with:
 
 Open a web browser and go to address:
 
-    http://127.0.0.1:8000/
+    http://localhost:8000/
 
 A page informing of a successful Django installation should show up.
 

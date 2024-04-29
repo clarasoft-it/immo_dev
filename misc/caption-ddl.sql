@@ -9,6 +9,10 @@ Insert into application values('IMMO_BUILDING_INFO', 'IMMO building info', 'IMMO
 Insert into application values('IMMO_OWNERS', 'IMMO owners', 'IMMO owners page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('IMMO_OWNER_INFO', 'IMMO owner info', 'IMMO owner information page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDINGS_ADD', 'IMMO owner info', 'IMMO owner information page captions', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('BUILDINGS_API_POST', 'IMMO BUILDINGS POST', 'IMMO buildings API - POST', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('UNITS_API_POST', 'IMMO UNITS POST', 'IMMO units API - POST', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('UNITS_FORM', 'IMMO UNITS FORM', 'IMMO units form messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
 
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'eng', 'Home', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'fre', 'Accueil', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -80,6 +84,14 @@ Insert into caption values('fef6ad3b-d8bb-4ad1-9a67-005c3ef38296', 'COMMON', 'en
 Insert into caption values('fef6ad3b-d8bb-4ad1-9a67-005c3ef38296', 'COMMON', 'fre', 'Mot de passe', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('19863e4a-63ba-44e8-85da-28d37dce7ae1', 'COMMON', 'eng', 'Login', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('19863e4a-63ba-44e8-85da-28d37dce7ae1', 'COMMON', 'fre', 'Accéder', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('48ae6346-c9f0-4491-a585-6717268d69d3', 'COMMON', 'eng', 'Address', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('48ae6346-c9f0-4491-a585-6717268d69d3', 'COMMON', 'fre', 'Adresse', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0fec2786-0b10-4ffb-866e-8fe989311634', 'COMMON', 'eng', 'Share %', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0fec2786-0b10-4ffb-866e-8fe989311634', 'COMMON', 'fre', '% Quote-part', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('d05c8867-a531-4fd6-bed1-9be4abb7e148', 'COMMON', 'eng', 'Add', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('d05c8867-a531-4fd6-bed1-9be4abb7e148', 'COMMON', 'fre', 'Ajouter', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('e2d0157b-0a28-48fc-a02c-863360bdfef2', 'COMMON', 'eng', 'Remove', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('e2d0157b-0a28-48fc-a02c-863360bdfef2', 'COMMON', 'fre', 'Retirer', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'eng', 'Building added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'fre', 'L''immeuble a été ajouté avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -101,3 +113,19 @@ Insert into caption values('0x80020001', 'BUILDINGS_API_POST', 'eng', 'Database 
 Insert into caption values('0x80020001', 'BUILDINGS_API_POST', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80020002', 'BUILDINGS_API_POST', 'eng', 'Database error - integrity', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80020002', 'BUILDINGS_API_POST', 'fre', 'Erreur base de données - intégrité', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('MSG_1', 'UNITS_FORM', 'eng', 'Please select an owner', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_1', 'UNITS_FORM', 'fre', 'Veuillez svp choisir un propriétaire', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'UNITS_API_POST', 'eng', 'Unit added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'UNITS_API_POST', 'fre', 'L''unité a été ajoutée avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'UNITS_API_POST', 'eng', 'Missing name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'UNITS_API_POST', 'fre', 'Le nom est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010002', 'UNITS_API_POST', 'eng', 'Missing share %', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010002', 'UNITS_API_POST', 'fre', 'Le % de quote-part est manquant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010003', 'UNITS_API_POST', 'eng', 'Unit must have at least one owner', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010003', 'UNITS_API_POST', 'fre', 'L''unité doit avoir au moins un(e) propriétaire', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'UNITS_API_POST', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'UNITS_API_POST', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020002', 'UNITS_API_POST', 'eng', 'Database error - integrity', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020002', 'UNITS_API_POST', 'fre', 'Erreur base de données - intégrité', 'IMMO', current_timestamp, 'IMMO', current_timestamp);

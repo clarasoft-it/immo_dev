@@ -14,27 +14,21 @@
     
 </head>
 
-<body onload="init();">
+<body>
 
   <div class="topnav">
-    <a class="anchor-inactive" href="#">IMMO-DEV</a>
+    <a class="anchor-inactive" href="/">IMMO-DEV</a>
     <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
     <a href="/app/{{captions.langid}}/building_index">{{captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption}}</a>
     <a class="split" href="#user">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
     <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
   </div>
   <div style="clear:both; margin-top:30px;"></div>
-    <span class="main-title">{{captions.COMMON.K_e18b5642_8672_43de_8b6c_4bbaf6201e1f.caption}}: {{info.name}}</span>
+    <!-- <span class="main-title">{{captions.COMMON.K_e18b5642_8672_43de_8b6c_4bbaf6201e1f.caption}}: {{info.name}}</span> -->
+    <span class="main-title">{{info.name}}</span>
   </div>
-
-  <div id="t_building">
-    <table class="styled-table">
-      <tr><td>{{info.no}} {{info.street}}</td></tr>
-      <tr><td>{{info.city}}</td></tr>
-      <tr><td>{{info.prov}}</td></tr>
-      <tr><td>{{info.zip}}</td></tr>
-      <tr><td>{{info.country}}</td></tr>
-    </table>
+  <div style="font-family:sans-serif; font-size: 20px; border-bottom: 1px solid #ddd; margin-top: 20px; padding-bottom: 20px;">
+    {{info.no}} {{info.street}} {{info.city}} {{info.prov}} {{info.zip}} {{info.country}}
   </div>
 
   <div style="clear:both; margin-top:30px;"></div>
@@ -42,23 +36,25 @@
   </div>
 
   <div style="margin-top:30px;">
-    <a class="fcc-btn" href="#">{{captions.COMMON.K_d49656c0_6b46_42f3_8db1_b7d4d097e6cf.caption}}</a>
+    <a class="fcc-btn" href="/app/{{captions.langid}}/{{info.id}}/unit_create.html">{{captions.COMMON.K_d49656c0_6b46_42f3_8db1_b7d4d097e6cf.caption}}</a>
   </div>
   <div class="panel_grid">
     <table class="styled-table">
       <thead>
         <th>{{captions.COMMON.K_3169519d_be35_4edd_89f2_c5044fbb8171.caption}}</th>
+        <th>{{captions.COMMON.K_0fec2786_0b10_4ffb_866e_8fe989311634.caption}}</th>
         <th>{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</th>
       </thead>
       {% for unit in info.units %}
         <tr>
           <td>{{unit.name}}</td>
+          <td>{{unit.baseShare}}</td>
           <td>
-            <ul class="no-bullets">
-            {% for owner in unit.owners %}
-              <li><a href="#">{{owner.firstName}} {{owner.lastName}}</a></li>      
+            <table class="no-styled-table">
+            {%for owner in unit.owners %}
+              <tr><td>{{owner.firstName}} {{owner.lastName}}</td></tr>
             {% endfor %}
-            </ul>
+            </table>
           </td>
         </tr>
       {% endfor %}

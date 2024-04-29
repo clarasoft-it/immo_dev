@@ -43,5 +43,6 @@ class Caption(models.Model):
     class Meta:
         managed = False
         db_table = 'caption'
-        unique_together = (('id', 'app', 'lang'), ('app', 'lang', 'id'), ('id', 'app', 'lang'), ('lang', 'app', 'id'),)
+        unique_together = (('id', 'app', 'lang'), ('lang', 'app', 'id'),)
         db_table_comment = 'Languages'
+
