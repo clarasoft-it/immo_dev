@@ -9,12 +9,10 @@ def T_GetCaptions(appid, langid):
   captionSet = Caption.objects.filter(app=appid, lang=langid)
     
   captions = {}
-  captions["langid"] = langid
-  captions[appid] = {}
   
   for x in captionSet:
     # we need to repalce hyphens to undderscore to prevent parse errors in template
-    captions[appid]["K_" + x.id.replace("-", "_")] = {"caption": x.caption}
+    captions["K_" + x.id.replace("-", "_")] = {"caption": x.caption}
  
   return captions
 

@@ -48,6 +48,8 @@ def api_GET_buildingEnum(request, id):
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["envelope"]["hResult"] = "0x00000000"
   response["data"] = {}
+
+  #return only if builing is active
   response["data"]["buildings"] = qry_buildings()
   
   return HttpResponse(json.dumps(response), content_type="application/json")
@@ -132,16 +134,15 @@ def api_units(request, id):
 # example: http://127.0.0.1:8000/buildings
 #=========================================================================================
 
-def api_GET_unitEnum(request, building_id):
+def api_GET_unitEnum(request, id):
     
-  buildings = Unit.objects.all(building_id)
-
   response = {}
   response["envelope"] = {}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["envelope"]["hResult"] = "0x00000000"
-  response["data"] = {}
-  response["data"]["buildings"] = qry_units()
+
+  # returns the active units of the buuilding if it is also active
+  response["data"] = qry_units(id)
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -216,14 +217,35 @@ def api_GET_building(request, id):
   response["enveloppe"] = {}
   response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["hResult"] = '0x00000000'
+
+  # returns information of the building if it is active; only active units and owners are reurned
   response["data"] = qry_buildingInfo(id)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# route: /builings/<building_id>/address
+# method GET
+# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+#=========================================================================================
+
+def api_GET_buildingAddress(request, id):
+
+  response = {}
+  
+  response["enveloppe"] = {}
+  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["enveloppe"]["hResult"] = '0x00000000'
+
+  # Returns the active address if the building is active
+  response["data"] = qry_buildingAddress(id)
 
   return HttpResponse(json.dumps(response), content_type="application/json")
 
 #=========================================================================================
 # route: /builings/<building_id>/<unit-name>
 # method GET
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b/units
 #=========================================================================================
 
 def api_GET_unit(request, building_id, unit_name):
@@ -233,6 +255,8 @@ def api_GET_unit(request, building_id, unit_name):
   response["enveloppe"] = {}
   response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["hResult"] = '0x00000000'
+
+  # Returns unit information for active units if the building is also active
   response["data"] = qry_unitInfo(building_id, unit_name)
 
   return HttpResponse(json.dumps(response), content_type="application/json")
@@ -251,7 +275,7 @@ def api_GET_unit(request, building_id, unit_name):
 
 def qry_buildings():
 
-  buildings = Building.objects.all()
+  buildings = Building.objects.filter(status='0')
 
   info = []
   for x in buildings:
@@ -265,12 +289,26 @@ def qry_buildings():
 
 def qry_units(building_id):
 
-  units = Unit.objects.filter(id=building_id)
+  cursor = connection.cursor()
+  cursor.execute("select name from building where id = %s and status = '0'", [building_id])
+  columns = [col[0] for col in cursor.description]
+  buildingInfo = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-  info = []
-  for x in units:
-    info.append({'id': x.id, 'name': x.name})
+  info = {"buildingID": building_id, "buildingName": buildingInfo[0]["name"], "units": []}
 
+  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname, c.address1, c.address2, c.city, c.department, c.zip, c.country, c.phone1, c.phone2, c.fax, c.email from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status where a.building_id = %s And a.status = '0'", [building_id])
+  columns = [col[0] for col in cursor.description]
+  units = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+  curUnit = ""
+  for unit in units:
+    if curUnit != unit["name"]:
+      curUnit = unit["name"]
+      item = info["units"].append({"name": unit["name"], "baseShare": str(unit["base_share"]), "owners":[]})
+      info["units"][-1]["owners"].append({"firstName": unit["fname"], "lastName": unit["lname"]})
+    else:
+      info["units"][-1]["owners"].append({"firstName": unit["fname"], "lastName": unit["lname"]})
+  
   return info
 
 #=========================================================================================
@@ -280,7 +318,7 @@ def qry_units(building_id):
 def qry_buildingInfo(id):
 
   cursor = connection.cursor()
-  cursor.execute('select id, status, no, street, city, department, zip, country, name from building where id = %s', [id])
+  cursor.execute("select id, status, no, street, city, department, zip, country, name from building where id = %s and status = '0'", [id])
   columns = [col[0] for col in cursor.description]
   buildinInfo = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -295,8 +333,8 @@ def qry_buildingInfo(id):
   info["prov"] = buildinInfo[0]["department"]
   info["country"] = buildinInfo[0]["country"]
   info["units"] = []
-
-  cursor.execute('select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname, c.address1, c.address2, c.city, c.department, c.zip, c.country, c.phone1, c.phone2, c.fax, c.email from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name Join contact c on b.owner_id = c.id where a.building_id = %s', [id])
+  
+  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname, c.address1, c.address2, c.city, c.department, c.zip, c.country, c.phone1, c.phone2, c.fax, c.email from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status where a.building_id = %s And a.status = '0'", [id])
   columns = [col[0] for col in cursor.description]
   units = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -304,11 +342,35 @@ def qry_buildingInfo(id):
   for unit in units:
     if curUnit != unit["name"]:
       curUnit = unit["name"]
-      item = info["units"].append({"name": unit["name"], "baseShare": unit["base_share"], "owners":[]})
+      item = info["units"].append({"name": unit["name"], "baseShare": str(unit["base_share"]), "owners":[]})
       info["units"][-1]["owners"].append({"firstName": unit["fname"], "lastName": unit["lname"]})
     else:
       info["units"][-1]["owners"].append({"firstName": unit["fname"], "lastName": unit["lname"]})
   
+  return info
+
+#=========================================================================================
+# query: return building name and address
+#=========================================================================================
+
+def qry_buildingAddress(id):
+
+  cursor = connection.cursor()
+  cursor.execute("select id, status, no, street, city, department, zip, country, name from building where id = %s and status = '0'", [id])
+  columns = [col[0] for col in cursor.description]
+  buildinInfo = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+  info = {}
+  info["id"] = buildinInfo[0]["id"]
+  info["status"] = buildinInfo[0]["status"]
+  info["name"] = buildinInfo[0]["name"]
+  info["no"] = buildinInfo[0]["no"]
+  info["street"] = buildinInfo[0]["street"]
+  info["city"] = buildinInfo[0]["city"]
+  info["zip"] = buildinInfo[0]["zip"]
+  info["prov"] = buildinInfo[0]["department"]
+  info["country"] = buildinInfo[0]["country"]
+
   return info
 
 #=========================================================================================
@@ -317,7 +379,7 @@ def qry_buildingInfo(id):
 
 def qry_unitInfo(building_id, unit_name):
 
-  unit = Unit.objects.get(id=id)
+  unit = Unit.objects.filter(id=building_id, name=unit_name, status='0')
 
   info = {}
   info["building_id"] = unit.building_id

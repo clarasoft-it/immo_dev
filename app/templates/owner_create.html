@@ -11,6 +11,25 @@
 
   <script>
 
+var messages = {
+
+  "OWNERS_API_POST": {
+   "K_0x00000000": "{{ captions.OWNERS_API_POST.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.OWNERS_API_POST.K_0x80010001.caption }}",
+   "K_0x80010002": "{{ captions.OWNERS_API_POST.K_0x80010002.caption }}",
+   "K_0x80010003": "{{ captions.OWNERS_API_POST.K_0x80010003.caption }}",
+   "K_0x80010004": "{{ captions.OWNERS_API_POST.K_0x80010004.caption }}",
+   "K_0x80010005": "{{ captions.OWNERS_API_POST.K_0x80010005.caption }}",
+   "K_0x80010006": "{{ captions.OWNERS_API_POST.K_0x80010006.caption }}",
+   "K_0x80010007": "{{ captions.OWNERS_API_POST.K_0x80010007.caption }}",
+   "K_0x80010008": "{{ captions.OWNERS_API_POST.K_0x80010008.caption }}",
+   "K_0x80010009": "{{ captions.OWNERS_API_POST.K_0x80010009.caption }}",
+   "K_0x80020001": "{{ captions.OWNERS_API_POST.K_0x80020001.caption }}",
+   "K_0x80020002": "{{ captions.OWNERS_API_POST.K_0x80020002.caption }}",
+  }
+}
+
+
 function init() {
     document.getElementById("firstName").focus();
 }
@@ -48,6 +67,11 @@ function init() {
     <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><input type="text" id="country" /></td></tr>
   </table>
 
+</div>
+
+<div style="margin-top:20px;">
+  <div>Message</div>
+  <div id="msg"></div>
 </div>
 
   <div style="margin-top:20px;">
@@ -105,7 +129,7 @@ function submitInfo() {
             this.responseText;
 
             let data = JSON.parse(this.responseText);
-            let errMsg = "";
+            let errMsg = messages["OWNERS_API_POST"]["K_" + data.envelope.hResult];
 
             if (data.envelope.hResult != "0x00000000") {
 
@@ -114,44 +138,38 @@ function submitInfo() {
 
               switch (data.envelope.hResult) {
                 case "0x80010001":
-                  errMsg = "Missing first name";
                   document.getElementById("firstName").focus();
                   break;
                 case "0x80010002":
-                  errMsg = "Missing last name";
                   document.getElementById("lastName").focus();
                   break;
                 case "0x80010003":
-                  errMsg = "Missing address1";
                   document.getElementById("address1").focus();
                   break;
                 case "0x80010004":
-                  errMsg = "Missing address2";
                   document.getElementById("address2").focus();
                   break;
                 case "0x80010005":
-                  errMsg = "Missing city";
                   document.getElementById("city").focus();
                   break;
                 case "0x80010006":
-                  errMsg = "Missing province";
                   document.getElementById("prov").focus();
                   break;
                 case "0x80010007":
-                  errMsg = "Missing zip code";
                   document.getElementById("zip").focus();
                   break;
                 case "0x80010008":
-                  errMsg = "Missing country";
                   document.getElementById("country").focus();
+                case "0x80010009":
+                  document.getElementById("phone1").focus();
                   break;
               }
-
-              alert("Error creating building - hResult: " +  data.envelope.hResult + " - " + errMsg);
             }
             else {
               clearForm();
             }
+
+            document.getElementById("msg").innerHTML = data.envelope.hResult + " - " + errMsg;
         }
     }
 

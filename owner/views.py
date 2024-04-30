@@ -92,6 +92,8 @@ def api_POST_owner(request):
     hResult = '0x80010007'
   elif Data["country"] == "":
     hResult = '0x80010008'
+  elif Data["phone1"] == "":
+    hResult = '0x80010009'
   else:
 
     #------------------------------------------------------------------    
@@ -148,7 +150,7 @@ def qry_owners():
 
   info = []
   for x in owners:
-    contact = Contact.objects.get(id=x.id)
+    contact = Contact.objects.get(id=x.id, status='0')
     info.append({'id':x.id, 
                  'firstName': contact.fname, 
                  'lastName': contact.lname,
@@ -172,7 +174,7 @@ def qry_owners():
 
 def qry_ownerInfo(id):
 
-  contact = Contact.objects.get(id=id)
+  contact = Contact.objects.get(id=id, status='0')
 
   info = {}
   info["id"] = contact.id

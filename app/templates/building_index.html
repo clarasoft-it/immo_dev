@@ -10,17 +10,179 @@
   <link rel="stylesheet" href="{% static 'css/app.css' %}">  
   <script>
 
-  function buildingUpdate(buildingID) {
-    alert(buildingID)
+var messages = {
+
+  "BUILDING_API_GET_ADDRESS": {
+   "K_0x00000000": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80010001.caption }}",
+   "K_0x80020001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80020001.caption }}",
+  }
+}
+
+  function fillUpdateForm(data) {
+
+    document.getElementById("dlg_update_name").value = data["name"];
+    document.getElementById("dlg_update_no").value = data["no"];
+    document.getElementById("dlg_update_street").value = data["street"];
+    document.getElementById("dlg_update_city").value = data["city"];
+    document.getElementById("dlg_update_prov").value = data["zip"];
+    document.getElementById("dlg_update_zip").value = data["prov"];
+    document.getElementById("dlg_update_country").value = data["country"];
   }
 
-  function buildingDelete(buildingID) {
-    alert(buildingID)
+function fillDeleteForm(data) {
+
+  document.getElementById("dlg_delete_name").innerHTML = data["name"];
+  document.getElementById("dlg_delete_no").innerHTML = data["no"];
+  document.getElementById("dlg_delete_street").innerHTML = data["street"];
+  document.getElementById("dlg_delete_city").innerHTML = data["city"];
+  document.getElementById("dlg_delete_prov").innerHTML = data["zip"];
+  document.getElementById("dlg_delete_zip").innerHTML = data["prov"];
+  document.getElementById("dlg_delete_country").innerHTML = data["country"];
+}
+
+function buildingUpdate(buildingID) {
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.enveloppe.hResult];
+
+      if (data.enveloppe.hResult != "0x00000000") {
+
+        document.getElementById("input").style.backgroundColor = "#fa9daa";
+        document.getElementById("result").style.backgroundColor = "#fa9daa";
+
+        switch (data.enveloppe.hResult) {
+          case "0x80010001":
+            document.getElementById("msg").innerHTML = data.enveloppe.hResult + " - " + errMsg;
+            document.getElementById("name").focus();
+            break;
+        }
+
+        alert(data.enveloppe.hResult + " - " + errMsg);
+      }
+      else {
+
+        fillUpdateForm(data.data);
+        document.getElementById("buildingUpadteDlg").style.display = "block";
+        document.getElementById("dlg_update_name").focus();
+      }
+    }
   }
+
+  var url = "http://localhost:8000/buildings/" + buildingID + "/address";
+  xhttp.open("GET", url);
+  //xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send();    
+}
+
+function buildingDelete(buildingID) {
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.enveloppe.hResult];
+
+      if (data.enveloppe.hResult != "0x00000000") {
+
+        document.getElementById("input").style.backgroundColor = "#fa9daa";
+        document.getElementById("result").style.backgroundColor = "#fa9daa";
+
+        switch (data.enveloppe.hResult) {
+          case "0x80010001":
+            document.getElementById("msg").innerHTML = data.enveloppe.hResult + " - " + errMsg;
+            document.getElementById("name").focus();
+            break;
+        }
+
+        alert(data.enveloppe.hResult + " - " + errMsg);
+        //document.getElementById("msg").innerHTML = data.envelope.hResult + " - " + errMsg;
+      }
+      else {
+
+       fillDeleteForm(data.data);
+       document.getElementById("buildingDeleteDlg").style.display = "block";
+       xhttp = new XMLHttpRequest();
+
+      }
+    }
+  }
+
+  var url = "http://localhost:8000/buildings/" + buildingID + "/address";
+  xhttp.open("GET", url);
+  //xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send();    
+}
+
+function Dlg_Update_Cancel() {
+  Dlg_Update_clearForm();
+  document.getElementById("buildingUpadteDlg").style.display = "none";
+}
+
+function Dlg_Update_submit() {
+  Dlg_Update_clearForm();
+  document.getElementById("buildingUpadteDlg").style.display = "none";
+}
+
+function Dlg_Delete_Cancel() {
+  document.getElementById("buildingDeleteDlg").style.display = "none";
+}
+
+function Dlg_Delete_submit() {
+  document.getElementById("buildingDeleteDlg").style.display = "none";
+}
 
   </script>
 
 <style>
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 </style>
 
@@ -60,13 +222,102 @@
           <td>{{building.prov}}</td>
           <td>{{building.zip}}</td>
           <td>{{building.country}}</td>
-          <td><input type="button" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="buildingUpdate('{{building.id}})')" /></td>
-          <td><input type="button" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="buildingUpdate('{{building.id}})')" /></td>
+          <td><input type="button" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="buildingUpdate('{{building.id}}')" /></td>
+          <td><input type="button" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="buildingDelete('{{building.id}}')" /></td>
         </tr>
     {% endfor %}
     </table>
   </div>
 
+  <div id="buildingUpadteDlg" class="modal">
+
+    <!-- Update dialog -->
+    <div class="modal-content">
+      <span id="buildingUpdateDlg_close" class="close">&times;</span>
+      <p id="dlg_update_buildingName">{{captions.BUILDING_UPDATE.K_MSG_1.caption}}</p>
+
+      <table class="form-table">
+        <tr><td>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</td><td><input type="text" id="dlg_update_name" /></td></tr>
+        <tr><td>{{captions.COMMON.K_f5e91168_412e_4048_ab4a_e37602f6653f.caption}}</td><td><input type="text" id="dlg_update_no" /></td></tr>
+        <tr><td>{{captions.COMMON.K_d4ec6ac2_c5e5_4e9f_9267_0b94d95ffde6.caption}}</td><td><input type="text" id="dlg_update_street" /></td></tr>
+        <tr><td>{{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}</td><td><input type="text" id="dlg_update_city" /></td></tr>
+        <tr><td>{{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}</td><td><input type="text" id="dlg_update_prov" /></td></tr>
+        <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><input type="text" id="dlg_update_zip" /></td></tr>
+        <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><input type="text" id="dlg_update_country" /></td></tr>
+        <tr><td></td><td><input type="button" id="clear" value="{{captions.COMMON.K_5eb6b2f8_f8c6_41f4_a6bf_22bf46c54ce8.caption}}" onclick="Dlg_Update_clearForm();"/>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_Update_Cancel();"/>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="Dlg_Update_submit();"/></td></tr>
+      </table>
+        
+    </div>
+   
+  </div>
+
+
+  <div id="buildingDeleteDlg" class="modal">
+
+    <!-- Update dialog -->
+    <div class="modal-content">
+      <span id="buildingDeleteDlg_close" class="close">&times;</span>
+      <p id="dlg_delete_buildingName">{{captions.BUILDING_DELETE.K_MSG_1.caption}}</p>
+
+      <table class="form-table">
+        <tr><td>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</td><td><span id="dlg_delete_name"> </span></td></tr>
+        <tr><td>{{captions.COMMON.K_f5e91168_412e_4048_ab4a_e37602f6653f.caption}}</td><td><span type="text" id="dlg_delete_no" </span></td></tr>
+        <tr><td>{{captions.COMMON.K_d4ec6ac2_c5e5_4e9f_9267_0b94d95ffde6.caption}}</td><td><span type="text" id="dlg_delete_street" </span></td></tr>
+        <tr><td>{{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}</td><td><span type="text" id="dlg_delete_city" </span></td></tr>
+        <tr><td>{{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}</td><td><span type="text" id="dlg_delete_prov" </span></td></tr>
+        <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><span type="text" id="dlg_delete_zip" </span></td></tr>
+        <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><span type="text" id="dlg_delete_country" </span></td></tr>
+        <tr><td></td><td><input type="button" id="dlg_delete_cancel" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_Delete_Cancel();"/>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="Dlg_Delete_submit();"/></td></tr>
+      </table>
+        
+    </div>
+   
+  </div>
+
+<script>
+
+  
+// Get the modal
+
+// Get the <span> element that closes the modal
+var Dlg_Update_span = document.getElementById("buildingUpdateDlg_close");
+var Dlg_Delete_span = document.getElementById("buildingDeleteDlg_close");
+
+
+// When the user clicks on <span> (x), close the modal
+Dlg_Update_span.onclick = function() {
+  document.getElementById("buildingUpadteDlg").style.display = "none";
+}
+
+Dlg_Delete_span.onclick = function() {
+  document.getElementById("buildingDeleteDlg").style.display = "none";
+}
+
+
+function Dlg_Update_clearForm() {
+
+  document.getElementById("dlg_update_name").value = "";
+  document.getElementById("dlg_update_no").value = "";
+  document.getElementById("dlg_update_street").value = "";
+  document.getElementById("dlg_update_city").value = "";
+  document.getElementById("dlg_update_prov").value = "";
+  document.getElementById("dlg_update_zip").value = "";
+  document.getElementById("dlg_update_country").value = "";
+
+/*
+document.getElementById("input").style.backgroundColor = "#bdfab9";
+document.getElementById("result").style.backgroundColor = "#bdfab9";
+*/
+  document.getElementById("dlg_update_name").focus();
+
+}
+
+
+
+  </script>
 </body>
 
 </html>
