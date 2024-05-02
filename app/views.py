@@ -68,22 +68,27 @@ def AppOwnerCreate(request, langid):
   return render(request, "owner_create.html", {"captions":captions})
 
 #-------------------------------------------------------------------------------------
-# Building functions
+# Building index page
 #-------------------------------------------------------------------------------------
 
-def AppBuildingIndex(request, langid):
+def HTML_PAGE_AppBuildingIndex(request, langid):
 
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid)
   captions["BUILDING_UPDATE"] = T_GetCaptions("BUILDING_UPDATE", langid)
   captions["BUILDING_DELETE"] = T_GetCaptions("BUILDING_DELETE", langid)
   captions["BUILDING_API_GET_ADDRESS"] = T_GetCaptions("BUILDING_API_GET_ADDRESS", langid)
+  captions["BUILDING_API_PUT_ADDRESS"] = T_GetCaptions("BUILDING_API_PUT_ADDRESS", langid)
 
   buildingSet = qry_buildings()
 
   return render(request, "building_index.html", {"captions": captions, "buildings": buildingSet})
 
-def AppBuildingInfo(request, langid, id):
+#-------------------------------------------------------------------------------------
+# Building instance information page
+#-------------------------------------------------------------------------------------
+
+def HTML_PAGE_AppBuildingInfo(request, langid, id):
   
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid) 
@@ -93,7 +98,11 @@ def AppBuildingInfo(request, langid, id):
   
   return render(request, "building_info.html", {"captions": captions, "info": buildingInfo})
 
-def AppBuildingCreate(request, langid):
+#-------------------------------------------------------------------------------------
+# Building creation page
+#-------------------------------------------------------------------------------------
+
+def HTML_PAGE_AppBuildingCreate(request, langid):
   
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid) 
@@ -122,3 +131,16 @@ def AppUnitCreate(request, langid, building_id):
   building["name"] = buildingInfo["name"]
 
   return render(request, "unit_create.html", {"captions": captions, "building": building, "owners": owners})
+
+#-------------------------------------------------------------------------------------
+# HTML COMPONENT : Building index table
+#-------------------------------------------------------------------------------------
+
+def HTML_SECTION_AppBuildingIndexTable(request, langid):
+  
+  captions = {"langid": langid}
+  captions["COMMON"] = T_GetCaptions("COMMON", langid) 
+  buildingIndex = qry_buildings()
+
+  return render(request, "COMPONENT_buildingInfoTable.html", {"captions": captions, "buildings": buildingIndex})
+

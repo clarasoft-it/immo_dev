@@ -16,6 +16,7 @@ Insert into application values('UNITS_FORM', 'IMMO UNITS FORM', 'IMMO units form
 Insert into application values('BUiLDING_UPDATE', 'BUILDING UPDATE', 'Builduing info update messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDING_DELETE', 'BUILDING DELETE', 'Building delete messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDING_API_GET_ADDRESS', 'BUILDING API GET ADDRESS DELETE', 'Building basic (address) information', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('BUILDING_API_PUT_ADDRESS', 'BUILDING API PUT ADDRESS DELETE', 'Building basic (address) information update request', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'eng', 'Home', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'fre', 'Accueil', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -150,6 +151,13 @@ Insert into caption values('0x80010001', 'BUILDING_API_GET_ADDRESS', 'eng', 'GET
 Insert into caption values('0x80010001', 'BUILDING_API_GET_ADDRESS', 'fre', 'GET Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80020001', 'BUILDING_API_GET_ADDRESS', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80020001', 'BUILDING_API_GET_ADDRESS', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'BUILDING_API_PUT_ADDRESS', 'eng', 'PUT Success', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'BUILDING_API_PUT_ADDRESS', 'fre', 'PUT Succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDING_API_PUT_ADDRESS', 'eng', 'PUT Failure - Not found', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDING_API_PUT_ADDRESS', 'fre', 'PUT Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDING_API_PUT_ADDRESS', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDING_API_PUT_ADDRESS', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('MSG_1', 'UNITS_FORM', 'eng', 'Please select an owner', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'UNITS_FORM', 'fre', 'Veuillez svp choisir un propriétaire', 'IMMO', current_timestamp, 'IMMO', current_timestamp);

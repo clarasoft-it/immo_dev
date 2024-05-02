@@ -1,13 +1,64 @@
-from django.http import HttpResponse
-from django.template import loader
-from .models import Building  
-from .models import Unit
-from owner.views import *
-from .models import BuildingOwner
+#========================================================================================
+#
+# A building is made up of these parts:
+#
+#   1) An ID, a name and an address; this is he building's basic information
+#   2) one or more units, each unit has a default quote share and one or more owners
+# 
+# Routes:
+#
+#   /buildings/
+#       GET retrieve all buildings
+#       POST insert a new building
+#
+#       Implementation: API_BuildingEnum
+#
+#   /buildings/<building ID>/
+#       GET retrieve building information (including unit information) 
+#       DELETE removes a building and all related entities
+#
+#       Implementation: API_BuildingInfo
+#
+#   /buildings/<building ID>/owners
+#       GET retrieve building owners 
+#
+#       Implementation: API_BuildingOwners
+#
+#   /buildings/<building ID>/address
+#       GET retrieve building address (basic inforamtion)
+#       PUT update building address (basic information)
+#
+#       Implementation: API_BuildingAddress
+#
+#   /buildings/<building ID>/units
+#       GET retrive building units
+#       POST insert a new unit in a building      
+#
+#       Implementation: API_UnitEnum
+#
+#   /buildings/<building ID>/units/quoteShares
+#       GET retrive building unit quote shares
+#       PUT update building unit quote shares
+#
+#       Implementation: API_UnitEnum
+#
+#   /buildings/<building ID>/units/<unit name>
+#       GET retrive information on a building unit (including a list of owners)
+#       PUT update a building unit (including its owners)
+#       DELETE remove a building unit
+#
+#       Implementation: API_UnitInfo
+#
+#========================================================================================
+
 import json
 import uuid
 import django.db
-from datetime import datetime
+
+from django.http import HttpResponse
+from .models import Building  
+from .models import Unit
+from owner.views import *
 from tools.tools import *
 from django.db import transaction
 from django.db import connection
@@ -22,29 +73,27 @@ from django.db import connection
 
 #=========================================================================================
 # route: /builings
-# handles GET and POST 
-# example: http://127.0.0.1:8000/buildings
 #=========================================================================================
 
-def api_buildings(request):
+def API_BuildingEnum(request):
 
-  if request.method == "POST":
-    return api_POST_building(request)
-  elif request.method == "GET":
-    return api_GET_buildingEnum(request, id)
+  if request.method == "GET":
+    return API_BuildingEnum_GET(request, id)
+  elif request.method == "POST":
+    return API_BuildingEnum_POST(request)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
 
-#=========================================================================================
-# route: /builings
-# method GET
-# example: http://127.0.0.1:8000/buildings
-#=========================================================================================
+#-----------------------------------------------------------------------------------------
 
-def api_GET_buildingEnum(request, id):
+def API_BuildingEnum_GET(request, id):
     
   buildings = Building.objects.all()
 
-  response = {}
-  response["envelope"] = {}
+  response = {"envelope":{}}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["envelope"]["hResult"] = "0x00000000"
   response["data"] = {}
@@ -54,14 +103,10 @@ def api_GET_buildingEnum(request, id):
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
-#=========================================================================================
-# route: /builings/<building_id>
-# method POST
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
-#=========================================================================================
+#-----------------------------------------------------------------------------------------
 
 @transaction.atomic
-def api_POST_building(request):  
+def API_BuildingEnum_POST(request):  
     
   #------------------------------------------------------------------
   # insert a new building
@@ -70,8 +115,7 @@ def api_POST_building(request):
 
   Data = json.loads(request.body)
   
-  response = {}
-  response["envelope"] = {}
+  response = {"envelope":{}}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["data"] = {}
 
@@ -114,30 +158,133 @@ def api_POST_building(request):
 
   return HttpResponse(json.dumps(response), content_type="application/json")
 
+#=========================================================================================
+# route: /buildings/<building-id>
+#=========================================================================================
+
+def API_BuildingInstance(request):
+
+  if request.method == "GET":
+    return API_BuildingInstance_GET(request, id)
+  elif request.method == "DELETE":
+    return API_BuildingInstance_DELETE(request)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
+  
+#-----------------------------------------------------------------------------------------
+
+def API_BuildingInstance_GET(request, id):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["hResult"] = '0x00000000'
+
+  # returns information of the building if it is active; only active units and owners are reurned
+  response["data"] = qry_buildingInfo(id)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#-----------------------------------------------------------------------------------------
+
+@transaction.atomic
+def API_BuildingInstance_DELETE(request):  
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["data"] = {}
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# route: /builings/<building-id>/owners
+#=========================================================================================
+
+def API_BuildingOwners(request):
+
+  if request.method == "GET":
+    return API_BuildingOwners_GET(request, id)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
+
+#-----------------------------------------------------------------------------------------
+
+def API_BuildingOwners_GET(request, id):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["data"] = {}
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#=========================================================================================
+# route: buildings/<building-id>/address
+#=========================================================================================
+
+def API_BuildingAddress(request, id):
+
+  if request.method == "GET":
+    return API_BuildingAddress_GET(request, id)
+  elif request.method == "PUT":
+    return API_BuildingAddress_PUT(request, id)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
+
+#-----------------------------------------------------------------------------------------
+
+def API_BuildingAddress_GET(request, id):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["envelope"]["hResult"] = '0x00000000'
+
+  # Returns the active address if the building is active
+  response["data"] = qry_buildingAddress(id)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#-----------------------------------------------------------------------------------------
+
+@transaction.atomic
+def API_BuildingAddress_PUT(request, id):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["data"] = {}
+
+  response["envelope"]["hResult"] = qry_BuildingAddress_UPDATE(id, json.loads(request.body))
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
 
 #=========================================================================================
 # route: /builings/<building-id>/units
-# handles GET and POST 
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b/units/
 #=========================================================================================
 
-def api_units(request, id):
+def API_UnitEnum(request, id):
 
-  if request.method == "POST":
-    return api_POST_unit(request, id)
-  elif request.method == "GET":
-    return api_GET_unitEnum(request, id)
+  if request.method == "GET":
+    return API_UnitEnum_GET(request, id)
+  elif request.method == "POST":
+    return API_UnitEnum_POST(request, id)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
 
-#=========================================================================================
-# route: /builings/<building id>/units
-# method GET
-# example: http://127.0.0.1:8000/buildings
-#=========================================================================================
+#-----------------------------------------------------------------------------------------
 
-def api_GET_unitEnum(request, id):
+def API_UnitEnum_GET(request, id):
     
-  response = {}
-  response["envelope"] = {}
+  response = {"envelope":{}}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["envelope"]["hResult"] = "0x00000000"
 
@@ -146,14 +293,10 @@ def api_GET_unitEnum(request, id):
   
   return HttpResponse(json.dumps(response), content_type="application/json")
 
-#=========================================================================================
-# route: /builings/<building id>/units
-# method POST
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b/units
-#=========================================================================================
+#-----------------------------------------------------------------------------------------
 
 @transaction.atomic
-def api_POST_unit(request, id):  
+def API_UnitEnum_POST(request, id):  
     
   #------------------------------------------------------------------
   # insert a new building unit
@@ -161,8 +304,7 @@ def api_POST_unit(request, id):
 
   Data = json.loads(request.body)
   
-  response = {}
-  response["envelope"] = {}
+  response = {"envelope":{}}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["data"] = {}
 
@@ -197,7 +339,6 @@ def api_POST_unit(request, id):
     except:
       hResult = '0x8FFFFFFF'
 
-
   # endif
 
   response["envelope"]["hResult"] = hResult
@@ -205,59 +346,91 @@ def api_POST_unit(request, id):
   return HttpResponse(json.dumps(response), content_type="application/json")
 
 #=========================================================================================
-# route: /builings/<building_id>
-# method GET
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+# route: /builings/<building-id>/units/quoteSahres
 #=========================================================================================
 
-def api_GET_building(request, id):
+def API_UnitQuoteShares(request):
 
-  response = {}
+  if request.method == "GET":
+    return API_UnitQuoteShares_GET(request, id)
+  elif request.method == "PUT":
+    return API_UnitQuoteShares_POST(request)
+  else:
+    response = {"envelope":{}}
+    response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
+
+#-----------------------------------------------------------------------------------------
+
+def API_UnitQuoteShares_GET(request, id):
+    
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["envelope"]["hResult"] = "0x00000000"
   
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["hResult"] = '0x00000000'
+  return HttpResponse(json.dumps(response), content_type="application/json")
 
-  # returns information of the building if it is active; only active units and owners are reurned
-  response["data"] = qry_buildingInfo(id)
+#-----------------------------------------------------------------------------------------
 
+def API_UnitQuoteShares_POST(request, id):
+    
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["envelope"]["hResult"] = "0x00000000"
+  
   return HttpResponse(json.dumps(response), content_type="application/json")
 
 #=========================================================================================
-# route: /builings/<building_id>/address
-# method GET
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b
+# route: /builings/<building_id>/units/<unit-name>
 #=========================================================================================
 
-def api_GET_buildingAddress(request, id):
+def API_UnitInstance(request):
 
-  response = {}
-  
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
-  response["enveloppe"]["hResult"] = '0x00000000'
+  if request.method == "GET":
+    return API_UnitInstance_GET(request, id)
+  elif request.method == "PUT":
+    return API_UnitInstance_PUT(request)
+  elif request.method == "DELETE":
+    return API_UnitInstance_DELETE(request)
+  else:
+    response = {"envelope":{}}
+    response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+    response["hResult"] = '0x8000FFFF'
+    return HttpResponse(json.dumps(response), content_type="application/json", status_code=405)
 
-  # Returns the active address if the building is active
-  response["data"] = qry_buildingAddress(id)
+#-----------------------------------------------------------------------------------------
 
-  return HttpResponse(json.dumps(response), content_type="application/json")
+def API_UnitInstance_GET(request, building_id, unit_name):
 
-#=========================================================================================
-# route: /builings/<building_id>/<unit-name>
-# method GET
-# example: http://127.0.0.1:8000/buildings/ae66f43d-50db-4ee7-806f-59e220c23e7b/units
-#=========================================================================================
-
-def api_GET_unit(request, building_id, unit_name):
-
-  response = {}
-  
-  response["enveloppe"] = {}
-  response["enveloppe"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["hResult"] = '0x00000000'
 
   # Returns unit information for active units if the building is also active
   response["data"] = qry_unitInfo(building_id, unit_name)
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#-----------------------------------------------------------------------------------------
+
+@transaction.atomic
+def API_UnitInstance_PUT(request, building_id, unit_name):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["hResult"] = '0x00000000'
+
+  return HttpResponse(json.dumps(response), content_type="application/json")
+
+#-----------------------------------------------------------------------------------------
+
+@transaction.atomic
+def API_UnitInstance_DELETE(request, building_id, unit_name):
+
+  response = {"envelope":{}}
+  response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
+  response["hResult"] = '0x00000000'
 
   return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -275,7 +448,7 @@ def api_GET_unit(request, building_id, unit_name):
 
 def qry_buildings():
 
-  buildings = Building.objects.filter(status='0')
+  buildings = Building.objects.filter(status='0').order_by("name")
 
   info = []
   for x in buildings:
@@ -387,3 +560,21 @@ def qry_unitInfo(building_id, unit_name):
 
   return info
 
+#=========================================================================================
+# query: update buiding address (basic information)
+#=========================================================================================
+
+def qry_BuildingAddress_UPDATE(id, Data):
+      
+  try:
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE BUILDING SET NAME=%s, NO=%s, STREET=%s, CITY=%s, DEPARTMENT=%s, COUNTRY=%s, ZIP=%s, UPDU='IMMO', UPDD=CURRENT_TIMESTAMP WHERE ID = %s", 
+        [Data["name"], Data["no"], Data["street"], Data["city"], Data["prov"], Data["country"], Data["zip"], id])
+    hResult = '0x00000000'
+  except django.db.IntegrityError as e:
+    hResult = '0x80020002'
+  except django.db.DatabaseError as e:
+    hResult = '0x80020001'
+
+  return hResult

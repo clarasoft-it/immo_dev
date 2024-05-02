@@ -29,6 +29,7 @@ var messages = {
 }
 
 function sortSelect(selElem) {
+
     var tmpAry = new Array();
     for (var i=0;i<selElem.options.length;i++) {
         tmpAry[i] = new Array();
@@ -245,6 +246,7 @@ function clearForm() {
 
     // remove selected owners
 
+    dropDown = document.getElementById("owners");
     var children = document.getElementById("ownerList").getElementsByTagName('input');
 
     for(var i=0; i<children.length; i++) {
@@ -253,7 +255,6 @@ function clearForm() {
       option = document.createElement('option');
       option.text = caption;
       option.value = id ;
-      dropDown = document.getElementById("owners");
       dropDown.add(option, 0);
     }
 

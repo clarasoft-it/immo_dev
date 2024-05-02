@@ -12,15 +12,27 @@
 
 var messages = {
 
+  "langid": "{{captions.langid}}",
+
   "BUILDING_API_GET_ADDRESS": {
    "K_0x00000000": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x00000000.caption }}",
    "K_0x80010001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80010001.caption }}",
    "K_0x80020001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80020001.caption }}",
+  },
+  "BUILDING_API_PUT_ADDRESS": {
+   "K_0x00000000": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x80010001.caption }}",
+   "K_0x80020001": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x80020001.caption }}",
   }
 }
 
-  function fillUpdateForm(data) {
+function fillBuildingTable() {
+  
+}
 
+function fillUpdateForm(data) {
+
+    document.getElementById("dlg_update_submit").setAttribute("data-id", data["id"]);
     document.getElementById("dlg_update_name").value = data["name"];
     document.getElementById("dlg_update_no").value = data["no"];
     document.getElementById("dlg_update_street").value = data["street"];
@@ -28,7 +40,7 @@ var messages = {
     document.getElementById("dlg_update_prov").value = data["zip"];
     document.getElementById("dlg_update_zip").value = data["prov"];
     document.getElementById("dlg_update_country").value = data["country"];
-  }
+ }
 
 function fillDeleteForm(data) {
 
@@ -41,6 +53,22 @@ function fillDeleteForm(data) {
   document.getElementById("dlg_delete_country").innerHTML = data["country"];
 }
 
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function buildingUpdate(buildingID) {
 
   xhttp = new XMLHttpRequest();
@@ -50,21 +78,20 @@ function buildingUpdate(buildingID) {
     if (this.readyState == 4 && this.status == 200) {
 
       let data = JSON.parse(this.responseText);
-      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.enveloppe.hResult];
+      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.envelope.hResult];
 
-      if (data.enveloppe.hResult != "0x00000000") {
+      if (data.envelope.hResult != "0x00000000") {
 
         document.getElementById("input").style.backgroundColor = "#fa9daa";
         document.getElementById("result").style.backgroundColor = "#fa9daa";
 
-        switch (data.enveloppe.hResult) {
+        switch (data.envelope.hResult) {
           case "0x80010001":
-            document.getElementById("msg").innerHTML = data.enveloppe.hResult + " - " + errMsg;
             document.getElementById("name").focus();
             break;
         }
 
-        alert(data.enveloppe.hResult + " - " + errMsg);
+        alert(data.envelope.hResult + " - " + errMsg);
       }
       else {
 
@@ -90,21 +117,20 @@ function buildingDelete(buildingID) {
     if (this.readyState == 4 && this.status == 200) {
 
       let data = JSON.parse(this.responseText);
-      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.enveloppe.hResult];
+      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.envelope.hResult];
 
-      if (data.enveloppe.hResult != "0x00000000") {
+      if (data.envelope.hResult != "0x00000000") {
 
         document.getElementById("input").style.backgroundColor = "#fa9daa";
         document.getElementById("result").style.backgroundColor = "#fa9daa";
 
-        switch (data.enveloppe.hResult) {
+        switch (data.envelope.hResult) {
           case "0x80010001":
-            document.getElementById("msg").innerHTML = data.enveloppe.hResult + " - " + errMsg;
             document.getElementById("name").focus();
             break;
         }
 
-        alert(data.enveloppe.hResult + " - " + errMsg);
+        alert(data.envelope.hResult + " - " + errMsg);
         //document.getElementById("msg").innerHTML = data.envelope.hResult + " - " + errMsg;
       }
       else {
@@ -128,9 +154,69 @@ function Dlg_Update_Cancel() {
   document.getElementById("buildingUpadteDlg").style.display = "none";
 }
 
-function Dlg_Update_submit() {
-  Dlg_Update_clearForm();
-  document.getElementById("buildingUpadteDlg").style.display = "none";
+function Dlg_Update_submit(obj) {
+  
+  data = {};
+
+  data.buildingID = obj.getAttribute("data-id");
+  data.name = document.getElementById("dlg_update_name").value;
+  data.no = document.getElementById("dlg_update_no").value;
+  data.street = document.getElementById("dlg_update_street").value;
+  data.city = document.getElementById("dlg_update_city").value;
+  data.prov = document.getElementById("dlg_update_prov").value;
+  data.zip = document.getElementById("dlg_update_zip").value;
+  data.country = document.getElementById("dlg_update_country").value;
+
+  //document.getElementById("input").value = JSON.stringify(data);
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_PUT_ADDRESS"]["K_" + data.envelope.hResult];
+
+      if (data.envelope.hResult != "0x00000000") {
+
+        document.getElementById("input").style.backgroundColor = "#fa9daa";
+        document.getElementById("result").style.backgroundColor = "#fa9daa";
+
+        alert(data.envelope.hResult + " - " + errMsg);
+      }
+      else {
+
+        Dlg_Update_clearForm();
+        document.getElementById("buildingUpadteDlg").style.display = "none";
+
+        // get the bulding table index from the server
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("t_buildings").innerHTML = this.responseText;
+          }
+          else {
+
+          }
+        }
+
+        var url = "http://localhost:8000/app/" + messages.langid + "/buildings/buildingInfoTable";
+        xhttp.open("GET", url);
+        xhttp.send();    
+      }
+    }
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  var url = "http://localhost:8000/buildings/" + data.buildingID + "/address";
+  xhttp.open("PUT", url);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send(JSON.stringify(data));    
 }
 
 function Dlg_Delete_Cancel() {
@@ -141,7 +227,7 @@ function Dlg_Delete_submit() {
   document.getElementById("buildingDeleteDlg").style.display = "none";
 }
 
-  </script>
+</script>
 
 <style>
 /* The Modal (background) */
@@ -245,8 +331,8 @@ function Dlg_Delete_submit() {
         <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><input type="text" id="dlg_update_zip" /></td></tr>
         <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><input type="text" id="dlg_update_country" /></td></tr>
         <tr><td></td><td><input type="button" id="clear" value="{{captions.COMMON.K_5eb6b2f8_f8c6_41f4_a6bf_22bf46c54ce8.caption}}" onclick="Dlg_Update_clearForm();"/>
-          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_Update_Cancel();"/>
-          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="Dlg_Update_submit();"/></td></tr>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="dlg_update_cancel" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_Update_Cancel();"/>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="dlg_update_submit" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="Dlg_Update_submit(this);"/></td></tr>
       </table>
         
     </div>
@@ -270,7 +356,7 @@ function Dlg_Delete_submit() {
         <tr><td>{{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}</td><td><span type="text" id="dlg_delete_zip" </span></td></tr>
         <tr><td>{{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}</td><td><span type="text" id="dlg_delete_country" </span></td></tr>
         <tr><td></td><td><input type="button" id="dlg_delete_cancel" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_Delete_Cancel();"/>
-          &nbsp;&nbsp;&nbsp;<input type="button" id="submit" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="Dlg_Delete_submit();"/></td></tr>
+          &nbsp;&nbsp;&nbsp;<input type="button" id="dlg_delete_submit" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="Dlg_Delete_submit();"/></td></tr>
       </table>
         
     </div>
