@@ -92,6 +92,9 @@ def HTML_PAGE_AppBuildingInfo(request, langid, id):
   
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid) 
+  captions["UNITS_API_POST"] = T_GetCaptions("UNITS_API_POST", langid)
+  captions["UNIT_CREATE"] = T_GetCaptions("UNIT_CREATE", langid)
+  
   buildingInfo = qry_buildingInfo(id)
 
   # get building owners
@@ -159,3 +162,28 @@ def HTML_SECTION_AppOwnerIndexTable(request, langid):
 
   return render(request, "COMPONENT_ownerInfoTable.html", {"captions": captions, "owners": owners})
 
+#-------------------------------------------------------------------------------------
+# HTML COMPONENT : Owner dropdown
+#-------------------------------------------------------------------------------------
+
+def HTML_SECTION_OwnerList(request, langid):
+  
+  owners = []
+  hResult = qry_owners(owners)
+
+  return render(request, "COMPONENT_ownerList.html", {"owners": owners})
+
+#-------------------------------------------------------------------------------------
+# HTML COMPONENT : Unit table
+#-------------------------------------------------------------------------------------
+
+def HTML_SECTION_UnitTable(request, langid, building_id):
+
+  captions = {"langid": langid}
+  captions["COMMON"] = T_GetCaptions("COMMON", langid) 
+  
+  buildingInfo = qry_buildingInfo(building_id)
+
+  # get building owners
+  
+  return render(request, "COMPONENT_buildingUnitTable.html", {"captions": captions, "info": buildingInfo})

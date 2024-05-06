@@ -1,0 +1,4 @@
+<option value="-"></option>
+{% for owner in owners %}
+<option value="{{owner.id}}">{{owner.firstName}}&nbsp;{{owner.lastName}} - {{owner.address1}} {{owner.city}} {{owner.province}} {{owner.country}}</option>
+{% endfor %}

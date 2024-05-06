@@ -13,6 +13,8 @@ urlpatterns = [
     path('app/<str:langid>/<str:building_id>/unit_create.html', views.AppUnitCreate, name='AppUnitCreate'),
     path('app/<str:langid>/buildings/buildingInfoTable', views.HTML_SECTION_AppBuildingIndexTable, name='HTML_SECTION_AppBuildingIndexTable'),
     path('app/<str:langid>/owners/ownerInfoTable', views.HTML_SECTION_AppOwnerIndexTable, name='HTML_SECTION_AppOwnerIndexTable'),
+    path('app/<str:langid>/ownerList', views.HTML_SECTION_OwnerList, name='HTML_SECTION_OwnerList'),
+    path('app/<str:langid>/buildings/<str:building_id>/unitTable', views.HTML_SECTION_UnitTable, name='HTML_SECTION_UnitTable'),
 ]
 
 

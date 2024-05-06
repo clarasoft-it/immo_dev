@@ -24,6 +24,7 @@ Insert into application values('OWNER_DELETE', 'OWNER DELETE', 'Owner delete mes
 Insert into application values('OWNER_API_GET', 'IMMO OWNER GET', 'IMMO owner API - GET', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('OWNER_API_PUT', 'IMMO OWNER PUT', 'IMMO owner API - PUT', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('OWNER_API_DELETE', 'IMMO OWNER DELETE', 'IMMO owner API - DELETE', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('UNIT_CREATE', 'UNIT CREATE', 'Builduing unit creation messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'eng', 'Home', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'fre', 'Accueil', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -209,6 +210,9 @@ Insert into caption values('MSG_1', 'UNITS_FORM', 'fre', 'Veuillez svp choisir u
 
 Insert into caption values('MSG_1', 'BUILDING_CREATE', 'eng', 'Building - create', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'BUILDING_CREATE', 'fre', 'Immeuble - création', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('MSG_1', 'UNIT_CREATE', 'eng', 'Unit - create', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_1', 'UNIT_CREATE', 'fre', 'Unité - création', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('MSG_1', 'BUILDING_UPDATE', 'eng', 'Building - update', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'BUILDING_UPDATE', 'fre', 'Immeuble - mise à jour', 'IMMO', current_timestamp, 'IMMO', current_timestamp);

@@ -10,6 +10,27 @@
 
   <script>
 
+var g_buildingID = "{{info.id}}";
+
+var messages = {
+
+  "langid": "{{captions.langid}}",
+
+  "UNITS_API_POST": {
+     "K_0x00000000": "{{ captions.UNITS_API_POST.K_0x00000000.caption }}",
+     "K_0x80010001": "{{ captions.UNITS_API_POST.K_0x80010001.caption }}",
+     "K_0x80010002": "{{ captions.UNITS_API_POST.K_0x80010002.caption }}",
+     "K_0x80010003": "{{ captions.UNITS_API_POST.K_0x80010003.caption }}",
+     "K_0x80020001": "{{ captions.UNITS_API_POST.K_0x80020001.caption }}",
+     "K_0x80020002": "{{ captions.UNITS_API_POST.K_0x80020002.caption }}",
+  },
+  "UNITS_FORM": {
+    "MSG_1": "{{ captions.UNITS_FORM.K_MSG_1.caption }}",
+  },
+  "COMMON": {
+    "K_0": "{{captions.COMMON.K_e2d0157b_0a28_48fc_a02c_863360bdfef2.caption}}"
+  }
+}
 
 function init() {
 
@@ -19,6 +40,49 @@ function init() {
 }
   </script>
     
+<style>
+
+ /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+ 
+</style>    
 </head>
 
 <body onload="init();">
@@ -58,11 +122,11 @@ function init() {
 <div id="units" class="tabcontent active">
   <div style="margin:20px;">
   <table>
-    <tr><td><a class="fcc-btn" href="/app/{{captions.langid}}/{{info.id}}/unit_create.html">{{captions.COMMON.K_d49656c0_6b46_42f3_8db1_b7d4d097e6cf.caption}}</a></td><td><a class="fcc-btn" href="/app/{{captions.langid}}/{{info.id}}/unit_create.html">{{captions.COMMON.K_3dfe8200_f6c7_44d1_bd37_165e610d76f4.caption}}</a></td></tr>
+    <tr><td><a class="fcc-btn" href="#" onclick="buildingUnitCreate('{{info.id}}');">{{captions.COMMON.K_d49656c0_6b46_42f3_8db1_b7d4d097e6cf.caption}}</a></td><td><a class="fcc-btn" href="#">{{captions.COMMON.K_3dfe8200_f6c7_44d1_bd37_165e610d76f4.caption}}</a></td></tr>
   </table>
   </div>
 
-  <div class="panel_grid">
+  <div id="units_t" class="panel_grid">
     <table class="styled-table">
       <thead>
         <th>{{captions.COMMON.K_3169519d_be35_4edd_89f2_c5044fbb8171.caption}}</th>
@@ -98,7 +162,40 @@ function init() {
 </div>
 
 
+
+<div id="buildingUnitCreateDlg" class="modal">
+
+  <!-- Create dialog -->
+  <div class="modal-content">
+    <span id="dlg_buildingUnit_create_close" class="close">&times;</span>
+    <p id="dlg_unitCreate_buildingName">{{captions.UNIT_CREATE.K_MSG_1.caption}}</p>
+
+    <table class="form-table">
+      <tr><td>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</td><td><input type="text" id="dlg_buildingUnit_create_name" /></td></tr>
+      <tr><td>{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</td><td><select name="owners" id="ownerDropdown">
+      </select> <input type="button" value="{{captions.COMMON.K_d05c8867_a531_4fd6_bed1_9be4abb7e148.caption}}" onclick="addOwner()"/>  
+    
+    
+      <div id="ownerList" style="margin:10px; background: #c1f7cf;">
+  
+      </div>
+      
+      </td></tr>
+      <tr><td></td><td><input type="button" id="dlg_buildingUnitCreate_done" value="{{captions.COMMON.K_35ac15cc_d3cd_4805_b5a7_31103f2f6897.caption}}" onclick="Dlg_buildingUnitnitCreate_Done('{{info.id}}');"/>&nbsp;&nbsp;&nbsp;
+                       <input type="button" id="submit" value="{{captions.COMMON.K_d05c8867_a531_4fd6_bed1_9be4abb7e148.caption}}" onclick="Dlg_buildingUnitCreate_Submit('{{info.id}}');"/></td></tr>
+    </table>
+
+  </div>  
+</div>  
+
+
+
+
+
 <script>
+
+
+//--------------------------------------------------------------------------------------------------------
 
 function building_info_openTab(evt, tabName) {
   // Declare all variables
@@ -120,6 +217,248 @@ function building_info_openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+
+//--------------------------------------------------------------------------------------------------------
+
+function sortSelect(selElem) {
+
+  var tmpAry = new Array();
+  for (var i=0;i<selElem.options.length;i++) {
+      tmpAry[i] = new Array();
+      tmpAry[i][0] = selElem.options[i].text;
+      tmpAry[i][1] = selElem.options[i].value;
+  }
+  tmpAry.sort();
+  while (selElem.options.length > 0) {
+      selElem.options[0] = null;
+  }
+  for (var i=0;i<tmpAry.length;i++) {
+      var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+      selElem.options[i] = op;
+  }
+
+  return;
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+function removeOwner() {
+
+  document.getElementById("DIV-" + this.id).remove();
+  option = document.createElement('option');
+  option.text = this.getAttribute("data-caption");
+  option.value = this.id ;
+  dropDown = document.getElementById("ownerDropdown");
+  dropDown.add(option, 0);
+  sortSelect(dropDown);
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+function addOwner() {
+
+  dropdown = document.getElementById("ownerDropdown");
+
+  if (dropdown.options[dropdown.selectedIndex].value == "-") {
+    alert(messages["UNITS_FORM"]["MSG_1"]);
+    return;
+  }
+
+  selecteOners = document.getElementById("ownerList");
+
+  ownerDiv = document.createElement("div");
+  ownerDiv.setAttribute("id", "DIV-" + dropdown.options[dropdown.selectedIndex].value);
+  t = document.createElement("span");
+  t.setAttribute("id", "SPAN-" + dropdown.options[dropdown.selectedIndex].value);
+  t.innerHTML = dropdown.options[dropdown.selectedIndex].text;
+  //ownerDiv.innerHTML = dropdown.options[dropdown.selectedIndex].text;
+  ownerDiv.appendChild(t);
+
+  b = document.createElement("input");
+  b.setAttribute("type", "button");
+  b.setAttribute("id", dropdown.options[dropdown.selectedIndex].value);
+  b.setAttribute("data-caption", dropdown.options[dropdown.selectedIndex].text);
+  b.value = messages["COMMON"]["K_0"];
+  b.onclick = removeOwner;
+  dropdown.remove(dropdown.selectedIndex);
+
+
+  ownerDiv.appendChild(b);
+  selecteOners.appendChild(ownerDiv);
+
+  dropdown.selectedIndex = 0;
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+// Get the <span> element that closes the modal
+var Dlg_buildingUnit_Create_span = document.getElementById("dlg_buildingUnit_create_close");  
+
+//--------------------------------------------------------------------------------------------------------
+// When the user clicks on <span> (x), close the modal
+
+Dlg_buildingUnit_Create_span.onclick = function() {
+    document.getElementById("buildingUnitCreateDlg").style.display = "none";
+  }
+
+//--------------------------------------------------------------------------------------------------------
+
+function buildingUnitCreate(buildingID) {
+
+  Dlg_buildingUnitCreate_Clear();
+
+  // get the owner list from the server
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("ownerDropdown").innerHTML = this.responseText;
+
+      //Dlg_unitCreate_clearForm();
+      document.getElementById("buildingUnitCreateDlg").style.display = "block";
+      document.getElementById("dlg_buildingUnit_create_name").focus();
+    }
+    else {
+      
+    }
+  }
+
+  var url = "http://localhost:8000/app/" + messages.langid + "/ownerList";
+  xhttp.open("GET", url);
+  xhttp.send();    
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+function Dlg_buildingUnitnitCreate_Done(buildingID) {
+
+
+  Dlg_buildingUnitCreate_Clear();
+  document.getElementById("buildingUnitCreateDlg").style.display = "none";
+
+  // get the unit table index from the server
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("units_t").innerHTML = this.responseText;
+    }
+    else {
+
+    }
+  }
+
+  var url = "http://localhost:8000/app/" + messages.langid + "/buildings/" + buildingID + "/unitTable";
+  xhttp.open("GET", url);
+  xhttp.send();    
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+//--------------------------------------------------------------------------------------------------------
+
+function Dlg_buildingUnitCreate_Submit(building_id) {
+
+  data = {"owners": []};
+
+  data.name = document.getElementById("dlg_buildingUnit_create_name").value;
+
+  // get all owners
+
+  var children = document.getElementById("ownerList").getElementsByTagName('input');
+
+  for(var i=0; i<children.length; i++) {
+    id = children[i].getAttribute("id");
+    data.owners.push({});
+    data.owners[i]["id"] = id;
+  }
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["UNITS_API_POST"]["K_" + data.envelope.hResult];
+
+      if (data.envelope.hResult != "0x00000000") {
+
+        switch (data.envelope.hResult) {
+          case "0x80010001":
+            document.getElementById("dlg_buildingUnit_create_name").focus();
+            break;
+          case "0x80010003":
+            document.getElementById("ownerDropdown").focus();
+            break;
+        }
+      }
+      else {
+        Dlg_buildingUnitCreate_Clear();
+      }
+    }
+  }
+
+  // This is toretrieve the CSRF token that must be returned
+  // to the server when a POST resquest is sent.
+
+  const csrftoken = getCookie('csrftoken');
+
+  //alert(csrftoken);
+
+  xhttp.open("POST", "http://localhost:8000/buildings/" + building_id + "/units/");
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send(JSON.stringify(data));    
+}
+
+function Dlg_buildingUnitCreate_Clear() {
+
+  document.getElementById("dlg_buildingUnit_create_name").value = "";
+
+  document.getElementById("dlg_buildingUnit_create_name").focus();
+
+  // remove selected owners
+
+  dropDown = document.getElementById("ownerDropdown");
+  var children = document.getElementById("ownerList").getElementsByTagName('input');
+
+  for(var i=0; i<children.length; i++) {
+    id = children[0].getAttribute("id");
+    caption = children[i].getAttribute("data-caption");
+    option = document.createElement('option');
+    option.text = caption;
+    option.value = id ;
+    dropDown.add(option, 0);
+  }
+
+  panel = document.getElementById("ownerList");
+
+  while (panel.lastElementChild) {
+    panel.removeChild(panel.lastElementChild);
+  }
+
+  sortSelect(dropDown);
+}
+
 
 </script>
 

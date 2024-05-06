@@ -1,0 +1,20 @@
+<table class="styled-table">
+    <thead>
+      <th>{{captions.COMMON.K_3169519d_be35_4edd_89f2_c5044fbb8171.caption}}</th>
+      <th>{{captions.COMMON.K_0fec2786_0b10_4ffb_866e_8fe989311634.caption}}</th>
+      <th>{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</th>
+    </thead>
+    {% for unit in info.units %}
+      <tr>
+        <td>{{unit.name}}</td>
+        <td>{{unit.baseShare}}</td>
+        <td>
+          <table class="no-styled-table">
+          {%for owner in unit.owners %}
+            <tr><td>{{owner.firstName}} {{owner.lastName}}</td></tr>
+          {% endfor %}
+          </table>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
