@@ -89,7 +89,7 @@ def API_BuildingEnum(request):
 
 #-----------------------------------------------------------------------------------------
 
-def API_BuildingEnum_GET(request, id):
+def API_BuildingEnum_GET():
     
   buildings = Building.objects.all()
 
@@ -162,12 +162,12 @@ def API_BuildingEnum_POST(request):
 # route: /buildings/<building-id>
 #=========================================================================================
 
-def API_BuildingInstance(request):
+def API_BuildingInstance(request, id):
 
   if request.method == "GET":
     return API_BuildingInstance_GET(request, id)
   elif request.method == "DELETE":
-    return API_BuildingInstance_DELETE(request)
+    return API_BuildingInstance_DELETE(request, id)
   else:
     response = {"envelope":{}}
     response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
@@ -190,11 +190,13 @@ def API_BuildingInstance_GET(request, id):
 #-----------------------------------------------------------------------------------------
 
 @transaction.atomic
-def API_BuildingInstance_DELETE(request):  
+def API_BuildingInstance_DELETE(request, id):  
 
   response = {"envelope":{}}
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["data"] = {}
+
+  response["envelope"]["hResult"] = qry_Building_DELETE(id)
 
   return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -288,7 +290,7 @@ def API_UnitEnum_GET(request, id):
   response["envelope"]["token"] = "ae66f43d-50db-4ee7-806f-59e220c23e7b"
   response["envelope"]["hResult"] = "0x00000000"
 
-  # returns the active units of the buuilding if it is also active
+  # returns the active units of the building if it is also active
   response["data"] = qry_units(id)
   
   return HttpResponse(json.dumps(response), content_type="application/json")
@@ -310,8 +312,6 @@ def API_UnitEnum_POST(request, id):
 
   if Data['name'] == "":
     hResult = '0x80010001'
-  elif Data['baseShare'] == "":
-    hResult = '0x80010002'
   elif len(Data["owners"]) == 0:  
     hResult = '0x80010003'
   else:
@@ -319,8 +319,8 @@ def API_UnitEnum_POST(request, id):
     try:
       cursor = connection.cursor()
       cursor.execute(
-      "INSERT INTO UNIT VALUES(%s, %s, '0', %s, 'IMMO', current_timestamp, 'IMMO', current_timestamp)", 
-      [id, Data["name"], Data["baseShare"]])
+      "INSERT INTO UNIT VALUES(%s, %s, '0', 0.00000, 'IMMO', current_timestamp, 'IMMO', current_timestamp)", 
+      [id, Data["name"]])
 
       # Insert owners
 
@@ -328,7 +328,13 @@ def API_UnitEnum_POST(request, id):
         cursor.execute(
           "INSERT INTO BUILDING_OWNER VALUES(%s, %s, %s, '0', current_date, current_date, '0', 'IMMO', current_timestamp, 'IMMO', current_timestamp)", 
           [id, Data["name"], owner["id"]])
-        
+
+      # because we are adding a unit, the quote shares already add up to 100% and will have to be reset by the user
+      
+      cursor.execute(
+      "UPDATE UNIT SET BASE_SHARE = 0.00000, UPDU = 'IMMO', UPDD = current_timestamp WHERE BUILDING_ID = %s", 
+      [id])
+
       hResult = '0x00000000'
     except django.db.IntegrityError as e:
       hResult = '0x80020002'
@@ -469,7 +475,7 @@ def qry_units(building_id):
 
   info = {"buildingID": building_id, "buildingName": buildingInfo[0]["name"], "units": []}
 
-  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname, c.address1, c.address2, c.city, c.department, c.zip, c.country, c.phone1, c.phone2, c.fax, c.email from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status where a.building_id = %s And a.status = '0'", [building_id])
+  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status Join address d on c.id = d.contact_id And c.status = d.status where a.building_id = %s And b.status = '0' and c.status='0'", [building_id])
   columns = [col[0] for col in cursor.description]
   units = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -507,7 +513,7 @@ def qry_buildingInfo(id):
   info["country"] = buildinInfo[0]["country"]
   info["units"] = []
   
-  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname, c.address1, c.address2, c.city, c.department, c.zip, c.country, c.phone1, c.phone2, c.fax, c.email from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status where a.building_id = %s And a.status = '0'", [id])
+  cursor.execute("select a.building_id, a.name, a.base_share, b.owner_id, c.fname, c.lname from unit a join building_owner b on a.building_id = b.building_id And a.name = b.unit_name And a.status = b.status Join contact c on b.owner_id = c.id And b.status = c.status Join address d on c.id = d.contact_id And c.status = d.status where a.building_id = %s And b.status = '0' and c.status='0'", [id])
   columns = [col[0] for col in cursor.description]
   units = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -574,6 +580,32 @@ def qry_BuildingAddress_UPDATE(id, Data):
     hResult = '0x00000000'
   except django.db.IntegrityError as e:
     hResult = '0x80020002'
+  except django.db.DatabaseError as e:
+    hResult = '0x80020001'
+
+  return hResult
+
+#=========================================================================================
+# query: delete buiding
+#=========================================================================================
+
+def qry_Building_DELETE(id):
+      
+  try:
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE BUILDING SET STATUS='7', UPDU = 'IMMO', UPDD = CURRENT_TIMESTAMP WHERE ID = %s", 
+        [id])
+    cursor.execute(
+        "UPDATE UNIT SET STATUS='7', UPDU = 'IMMO', UPDD = CURRENT_TIMESTAMP WHERE BUILDING_ID = %s", 
+        [id])
+    cursor.execute(
+        "UPDATE BUILDING_OWNER SET STATUS='7', END_DATE = current_timestamp, UPDU = 'IMMO', UPDD = CURRENT_TIMESTAMP WHERE BUILDING_ID = %s", 
+        [id])
+    cursor.execute(
+        "UPDATE EXERCICE SET STATUS='7', UPDU = 'IMMO', UPDD = CURRENT_TIMESTAMP WHERE BUILDING_ID = %s", 
+        [id])
+    hResult = '0x00000000'
   except django.db.DatabaseError as e:
     hResult = '0x80020001'
 

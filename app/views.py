@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from tools.tools import *
 from owner.views import qry_owners
-from owner.views import qry_ownerInfo
 from building.views import qry_buildings
 from building.views import qry_buildingInfo
 from owner.views import *
@@ -47,17 +46,16 @@ def AppOwnerIndex(request, langid):
   
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid)
-  ownerSet = qry_owners()
+  captions["OWNER_UPDATE"] = T_GetCaptions("OWNER_UPDATE", langid)
+  captions["OWNER_DELETE"] = T_GetCaptions("OWNER_DELETE", langid)
+  captions["BUILDINGS_API_POST"] = T_GetCaptions("BUILDINGS_API_POST", langid)
+  captions["OWNER_API_GET"] = T_GetCaptions("OWNER_API_GET", langid)
+  captions["OWNER_API_PUT"] = T_GetCaptions("OWNER_API_PUT", langid)
+  captions["OWNER_API_DELETE"] = T_GetCaptions("OWNER_API_DELETE", langid)
+  ownerSet = [];
+  qry_owners(ownerSet)
 
   return render(request, "owner_index.html", {"captions":captions, "owners": ownerSet})
-
-def AppOwnerInfo(request, langid, id):
-  
-  captions = {"langid": langid}
-  captions["COMMON"] = T_GetCaptions("COMMON", langid)
-  ownerInfo = qry_ownerInfo(id)
-
-  return render(request, "owner_info.html", {"captions":captions, "info": ownerInfo})
 
 def AppOwnerCreate(request, langid):
   
@@ -75,10 +73,12 @@ def HTML_PAGE_AppBuildingIndex(request, langid):
 
   captions = {"langid": langid}
   captions["COMMON"] = T_GetCaptions("COMMON", langid)
+  captions["BUILDING_CREATE"] = T_GetCaptions("BUILDING_CREATE", langid)
   captions["BUILDING_UPDATE"] = T_GetCaptions("BUILDING_UPDATE", langid)
   captions["BUILDING_DELETE"] = T_GetCaptions("BUILDING_DELETE", langid)
   captions["BUILDING_API_GET_ADDRESS"] = T_GetCaptions("BUILDING_API_GET_ADDRESS", langid)
   captions["BUILDING_API_PUT_ADDRESS"] = T_GetCaptions("BUILDING_API_PUT_ADDRESS", langid)
+  captions["BUILDING_API_DELETE"] = T_GetCaptions("BUILDING_API_DELETE", langid)
 
   buildingSet = qry_buildings()
 
@@ -124,7 +124,8 @@ def AppUnitCreate(request, langid, building_id):
   captions["UNITS_FORM"] = T_GetCaptions("UNITS_FORM", langid) 
   
   buildingInfo = qry_buildingInfo(id=building_id)
-  owners = qry_owners()
+  owners = []
+  qry_owners(owners)
 
   building = {}
   building["id"] = building_id
@@ -143,4 +144,18 @@ def HTML_SECTION_AppBuildingIndexTable(request, langid):
   buildingIndex = qry_buildings()
 
   return render(request, "COMPONENT_buildingInfoTable.html", {"captions": captions, "buildings": buildingIndex})
+
+#-------------------------------------------------------------------------------------
+# HTML COMPONENT : Owner index table
+#-------------------------------------------------------------------------------------
+
+def HTML_SECTION_AppOwnerIndexTable(request, langid):
+  
+  captions = {"langid": langid}
+  captions["COMMON"] = T_GetCaptions("COMMON", langid) 
+  owners = []
+
+  qry_owners(owners)
+
+  return render(request, "COMPONENT_ownerInfoTable.html", {"captions": captions, "owners": owners})
 

@@ -117,7 +117,6 @@ function addOwner() {
   <div style="margin-top:15px;">
   <table class="form-table">
     <tr><td>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</td><td><input type="text" id="name" /></td></tr>
-    <tr><td>{{captions.COMMON.K_0fec2786_0b10_4ffb_866e_8fe989311634.caption}}</td><td><input type="text" id="baseShare" /></td></tr>
     <tr><td>{{captions.COMMON.K_f25853d6_a349_417c_b36b_0413e43abb1d.caption}}</td><td><select name="owners" id="owners">
       <option value="-"></option>
       {% for owner in owners %}
@@ -172,7 +171,6 @@ function submitInfo(building_id) {
     data = {"owners": []};
 
     data.name = document.getElementById("name").value;
-    data.baseShare = document.getElementById("baseShare").value;
 
     // get all owners
 
@@ -206,9 +204,6 @@ function submitInfo(building_id) {
                 case "0x80010001":
                   document.getElementById("name").focus();
                   break;
-                case "0x80010002":
-                  document.getElementById("baseShare").focus();
-                  break;
                 case "0x80010003":
                   document.getElementById("owners").focus();
                   break;
@@ -238,7 +233,6 @@ function submitInfo(building_id) {
 function clearForm() {
 
     document.getElementById("name").value = "";
-    document.getElementById("baseShare").value = "";
 
     document.getElementById("input").style.backgroundColor = "#bdfab9";
     document.getElementById("result").style.backgroundColor = "#bdfab9";

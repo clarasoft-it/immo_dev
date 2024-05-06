@@ -1,0 +1,22 @@
+<div id="t_owners">
+  <table class="styled-table">
+
+    <thead><tr><th>{{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}</th>
+      <th>{{captions.COMMON.K_48ae6346_c9f0_4491_a585_6717268d69d3.caption}}</th>
+      <th>{{captions.COMMON.K_aac6fb8d_7fd9_4503_9adc_2d83fcbd3f7e.caption}}</th>
+      <th>{{captions.COMMON.K_7ffb065f_78da_49e9_83c8_7bb42b42fa48.caption}}</th>
+      <th>{{captions.COMMON.K_8d9c52a2_9b63_41b0_b580_7708966c3af3.caption}}</th>
+      <th>{{captions.COMMON.K_f5f21a35_515b_43f5_ae30_26f7f331def8.caption}}</th>
+      <th></th>
+      <th></th></tr>
+    </thead>
+  
+  {% for owner in owners %}
+     <tr>
+        <td>{{owner.firstName}} {{owner.lastName}}</td><td>{{owner.address1}} {{owner.address2}} {{owner.city}} {{owner.province}}, {{owner.zip}}, {{owner.country}}</td><td>{{owner.phone1}}</td><td>{{owner.phone2}}</td><td>{{owner.fax}}</td><td>{{owner.email}}</td>
+        <td><input type="button" value="{{captions.COMMON.K_9b5a5fc0_9727_45ec_8cfd_5c8affc803e6.caption}}" onclick="ownerUpdate('{{owner.id}}');" /></td>
+        <td><input type="button" value="{{captions.COMMON.K_7f6f9f74_9ac3_43b6_9f46_eb8dcdd08e5d.caption}}" onclick="ownerDelete('{{owner.id}}');" /></td>
+      </tr>
+  {% endfor %}
+  </table>
+</div>

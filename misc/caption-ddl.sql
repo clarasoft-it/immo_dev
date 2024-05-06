@@ -13,10 +13,17 @@ Insert into application values('BUILDINGS_API_POST', 'IMMO BUILDINGS POST', 'IMM
 Insert into application values('OWNERS_API_POST', 'IMMO OWNERS POST', 'IMMO owner API - POST', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('UNITS_API_POST', 'IMMO UNITS POST', 'IMMO units API - POST', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('UNITS_FORM', 'IMMO UNITS FORM', 'IMMO units form messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('BUILDING_CREATE', 'BUILDING CREATE', 'Builduing creation messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUiLDING_UPDATE', 'BUILDING UPDATE', 'Builduing info update messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDING_DELETE', 'BUILDING DELETE', 'Building delete messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDING_API_GET_ADDRESS', 'BUILDING API GET ADDRESS DELETE', 'Building basic (address) information', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into application values('BUILDING_API_PUT_ADDRESS', 'BUILDING API PUT ADDRESS DELETE', 'Building basic (address) information update request', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('BUILDING_API_DELETE', 'BUILDING API DELETE', 'Building delete messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('OWNER_UPDATE', 'OWNER UPDATE', 'Owner info update messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('OWNER_DELETE', 'OWNER DELETE', 'Owner delete messages', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('OWNER_API_GET', 'IMMO OWNER GET', 'IMMO owner API - GET', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('OWNER_API_PUT', 'IMMO OWNER PUT', 'IMMO owner API - PUT', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into application values('OWNER_API_DELETE', 'IMMO OWNER DELETE', 'IMMO owner API - DELETE', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'eng', 'Home', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('428cba82-129f-4a04-b494-30fc045d137a', 'COMMON', 'fre', 'Accueil', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -98,6 +105,16 @@ Insert into caption values('e2d0157b-0a28-48fc-a02c-863360bdfef2', 'COMMON', 'en
 Insert into caption values('e2d0157b-0a28-48fc-a02c-863360bdfef2', 'COMMON', 'fre', 'Retirer', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('52a6a83e-a824-4969-b22a-c22e0b43f6c1', 'COMMON', 'eng', 'Cancel', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('52a6a83e-a824-4969-b22a-c22e0b43f6c1', 'COMMON', 'fre', 'Annuler', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('257a419c-aee0-47f9-ad18-39acea099a26', 'COMMON', 'eng', 'Administrators', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('257a419c-aee0-47f9-ad18-39acea099a26', 'COMMON', 'fre', 'Administrateurs', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('ab7376ad-00a2-4908-91f7-710096c9d808', 'COMMON', 'eng', 'Fiscal exercices', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('ab7376ad-00a2-4908-91f7-710096c9d808', 'COMMON', 'fre', 'Exercices fiscaux', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('3dfe8200-f6c7-44d1-bd37-165e610d76f4', 'COMMON', 'eng', 'Manage quote shares', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('3dfe8200-f6c7-44d1-bd37-165e610d76f4', 'COMMON', 'fre', 'Gérer les quotes part', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('72ca2aa1-5dc9-4a54-a8be-d853d13018da', 'COMMON', 'eng', 'Rrefresh', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('72ca2aa1-5dc9-4a54-a8be-d853d13018da', 'COMMON', 'fre', 'Rafraîchir', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('35ac15cc-d3cd-4805-b5a7-31103f2f6897', 'COMMON', 'eng', 'Done', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('35ac15cc-d3cd-4805-b5a7-31103f2f6897', 'COMMON', 'fre', 'Terminer', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'eng', 'Building added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'fre', 'L''immeuble a été ajouté avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -159,8 +176,39 @@ Insert into caption values('0x80010001', 'BUILDING_API_PUT_ADDRESS', 'fre', 'PUT
 Insert into caption values('0x80020001', 'BUILDING_API_PUT_ADDRESS', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80020001', 'BUILDING_API_PUT_ADDRESS', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
+Insert into caption values('0x00000000', 'BUILDING_API_DELETE', 'eng', 'DELETE Success', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'BUILDING_API_DELETE', 'fre', 'DELETE Succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDING_API_DELETE', 'eng', 'DELETE Failure - Not found', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'BUILDING_API_DELETE', 'fre', 'DELETE Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDING_API_DELETE', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'BUILDING_API_DELETE', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'OWNER_API_GET', 'eng', 'GET Success', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'OWNER_API_GET', 'fre', 'GET Succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_GET', 'eng', 'GET Failure - Not found', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_GET', 'fre', 'GET Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_GET', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_GET', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'OWNER_API_PUT', 'eng', 'PUT Success', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'OWNER_API_PUT', 'fre', 'PUT Succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_PUT', 'eng', 'PUT Failure - Not found', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_PUT', 'fre', 'PUT Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_PUT', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_PUT', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('0x00000000', 'OWNER_API_DELETE', 'eng', 'DELETE Success', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x00000000', 'OWNER_API_DELETE', 'fre', 'DELETE Succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_DELETE', 'eng', 'DELETE Failure - Not found', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80010001', 'OWNER_API_DELETE', 'fre', 'DELETE Échec - Non trouvé', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_DELETE', 'eng', 'Database error', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0x80020001', 'OWNER_API_DELETE', 'fre', 'Erreur base de données', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
 Insert into caption values('MSG_1', 'UNITS_FORM', 'eng', 'Please select an owner', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'UNITS_FORM', 'fre', 'Veuillez svp choisir un propriétaire', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('MSG_1', 'BUILDING_CREATE', 'eng', 'Building - create', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_1', 'BUILDING_CREATE', 'fre', 'Immeuble - création', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('MSG_1', 'BUILDING_UPDATE', 'eng', 'Building - update', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'BUILDING_UPDATE', 'fre', 'Immeuble - mise à jour', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -169,6 +217,14 @@ Insert into caption values('MSG_1', 'BUILDING_DELETE', 'eng', 'Building - delete
 Insert into caption values('MSG_1', 'BUILDING_DELETE', 'fre', 'Immeuble - suppression', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_2', 'BUILDING_DELETE', 'eng', 'Please confirm you want to delete this building', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_2', 'BUILDING_DELETE', 'fre', 'Veuillez svp confirmer la suppression de l''immeuble', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('MSG_1', 'OWNER_UPDATE', 'eng', 'Owner - update', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_1', 'OWNER_UPDATE', 'fre', 'Propriétaire - mise à jour', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
+Insert into caption values('MSG_1', 'OWNER_DELETE', 'eng', 'Owner - delete', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_1', 'OWNER_DELETE', 'fre', 'propriétaire - suppression', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_2', 'OWNER_DELETE', 'eng', 'Please confirm you want to delete this owner', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_2', 'OWNER_DELETE', 'fre', 'Veuillez svp confirmer la suppression du propriétaire', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('0x00000000', 'UNITS_API_POST', 'eng', 'Unit added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x00000000', 'UNITS_API_POST', 'fre', 'L''unité a été ajoutée avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
