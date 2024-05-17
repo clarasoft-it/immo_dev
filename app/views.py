@@ -85,6 +85,25 @@ def HTML_PAGE_AppBuildingIndex(request, langid):
   return render(request, "building_index.html", {"captions": captions, "buildings": buildingSet})
 
 #-------------------------------------------------------------------------------------
+# Building wizard page
+#-------------------------------------------------------------------------------------
+
+def HTML_PAGE_AppBuildingWizard(request, langid):
+
+  captions = {"langid": langid}
+  captions["COMMON"] = T_GetCaptions("COMMON", langid)
+  captions["BUILDING_CREATE"] = T_GetCaptions("BUILDING_CREATE", langid)
+  captions["BUILDING_UPDATE"] = T_GetCaptions("BUILDING_UPDATE", langid)
+  captions["BUILDING_DELETE"] = T_GetCaptions("BUILDING_DELETE", langid)
+  captions["BUILDING_API_GET_ADDRESS"] = T_GetCaptions("BUILDING_API_GET_ADDRESS", langid)
+  captions["BUILDING_API_PUT_ADDRESS"] = T_GetCaptions("BUILDING_API_PUT_ADDRESS", langid)
+  captions["BUILDING_API_DELETE"] = T_GetCaptions("BUILDING_API_DELETE", langid)
+
+  buildingSet = qry_buildings()
+
+  return render(request, "building_wizard.html", {"captions": captions, "buildings": buildingSet})
+
+#-------------------------------------------------------------------------------------
 # Building instance information page
 #-------------------------------------------------------------------------------------
 

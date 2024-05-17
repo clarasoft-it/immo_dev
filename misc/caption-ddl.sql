@@ -117,6 +117,11 @@ Insert into caption values('72ca2aa1-5dc9-4a54-a8be-d853d13018da', 'COMMON', 'fr
 Insert into caption values('35ac15cc-d3cd-4805-b5a7-31103f2f6897', 'COMMON', 'eng', 'Done', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('35ac15cc-d3cd-4805-b5a7-31103f2f6897', 'COMMON', 'fre', 'Terminer', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
+Insert into caption values('3ee7202a-f027-4a33-88a9-a563b76c1c56', 'COMMON', 'eng', 'Next', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('3ee7202a-f027-4a33-88a9-a563b76c1c56', 'COMMON', 'fre', 'Suivant', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0c9dd978-2263-4206-9f7e-272acb7a3c2a', 'COMMON', 'eng', 'Previous', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('0c9dd978-2263-4206-9f7e-272acb7a3c2a', 'COMMON', 'fre', 'Précéddent', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'eng', 'Building added successfully', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x00000000', 'BUILDINGS_API_POST', 'fre', 'L''immeuble a été ajouté avec succès', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('0x80010001', 'BUILDINGS_API_POST', 'eng', 'Missing name', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
@@ -210,6 +215,8 @@ Insert into caption values('MSG_1', 'UNITS_FORM', 'fre', 'Veuillez svp choisir u
 
 Insert into caption values('MSG_1', 'BUILDING_CREATE', 'eng', 'Building - create', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'BUILDING_CREATE', 'fre', 'Immeuble - création', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_2', 'BUILDING_CREATE', 'eng', 'Building - create - add owners', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
+Insert into caption values('MSG_2', 'BUILDING_CREATE', 'fre', 'Immeuble - création - ajout des propriétaires', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 
 Insert into caption values('MSG_1', 'UNIT_CREATE', 'eng', 'Unit - create', 'IMMO', current_timestamp, 'IMMO', current_timestamp);
 Insert into caption values('MSG_1', 'UNIT_CREATE', 'fre', 'Unité - création', 'IMMO', current_timestamp, 'IMMO', current_timestamp);

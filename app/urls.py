@@ -15,6 +15,9 @@ urlpatterns = [
     path('app/<str:langid>/owners/ownerInfoTable', views.HTML_SECTION_AppOwnerIndexTable, name='HTML_SECTION_AppOwnerIndexTable'),
     path('app/<str:langid>/ownerList', views.HTML_SECTION_OwnerList, name='HTML_SECTION_OwnerList'),
     path('app/<str:langid>/buildings/<str:building_id>/unitTable', views.HTML_SECTION_UnitTable, name='HTML_SECTION_UnitTable'),
+
+    path('app/<str:langid>/building_wizard', views.HTML_PAGE_AppBuildingWizard, name='HTML_PAGE_AppBuildingWizard'),
+
 ]
 
 

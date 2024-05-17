@@ -1,0 +1,847 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IMMO (DEV)</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">  
+  <script>
+
+var g_buildingID = null;
+
+var messages = {
+
+  "langid": "{{captions.langid}}",
+
+  "BUILDINGS_API_POST": {
+   "K_0x00000000": "{{ captions.BUILDINGS_API_POST.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDINGS_API_POST.K_0x80010001.caption }}",
+   "K_0x80010002": "{{ captions.BUILDINGS_API_POST.K_0x80010002.caption }}",
+   "K_0x80010003": "{{ captions.BUILDINGS_API_POST.K_0x80010003.caption }}",
+   "K_0x80010004": "{{ captions.BUILDINGS_API_POST.K_0x80010004.caption }}",
+   "K_0x80010005": "{{ captions.BUILDINGS_API_POST.K_0x80010005.caption }}",
+   "K_0x80010006": "{{ captions.BUILDINGS_API_POST.K_0x80010006.caption }}",
+   "K_0x80010007": "{{ captions.BUILDINGS_API_POST.K_0x80010007.caption }}",
+   "K_0x80020001": "{{ captions.BUILDINGS_API_POST.K_0x80020001.caption }}",
+   "K_0x80020002": "{{ captions.BUILDINGS_API_POST.K_0x80020002.caption }}",
+  },
+  "BUILDING_API_GET_ADDRESS": {
+   "K_0x00000000": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80010001.caption }}",
+   "K_0x80020001": "{{ captions.BUILDING_API_GET_ADDRESS.K_0x80020001.caption }}",
+  },
+  "BUILDING_API_PUT_ADDRESS": {
+   "K_0x00000000": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x80010001.caption }}",
+   "K_0x80020001": "{{ captions.BUILDING_API_PUT_ADDRESS.K_0x80020001.caption }}",
+  },
+  "BUILDING_API_DELETE": {
+   "K_0x00000000": "{{ captions.BUILDING_API_DELETE.K_0x00000000.caption }}",
+   "K_0x80010001": "{{ captions.BUILDING_API_DELETE.K_0x80010001.caption }}",
+   "K_0x80020001": "{{ captions.BUILDING_API_DELETE.K_0x80020001.caption }}",
+  }
+}
+
+function Dlg_Update_resetForm() {
+  
+  document.getElementById("dlg_update_name").value = update_previous_data.name;
+  document.getElementById("dlg_update_no").value = update_previous_data.no;
+  document.getElementById("dlg_update_street").value = update_previous_data.street;
+  document.getElementById("dlg_update_city").value = update_previous_data.city;
+  document.getElementById("dlg_update_prov").value = update_previous_data.prov;
+  document.getElementById("dlg_update_zip").value = update_previous_data.zip;
+  document.getElementById("dlg_update_country").value = update_previous_data.country;
+}
+
+function Dlg_Update_clearForm() {
+
+  document.getElementById("dlg_update_name").value = "";
+  document.getElementById("dlg_update_no").value = "";
+  document.getElementById("dlg_update_street").value = "";
+  document.getElementById("dlg_update_city").value = "";
+  document.getElementById("dlg_update_prov").value = "";
+  document.getElementById("dlg_update_zip").value = "";
+  document.getElementById("dlg_update_country").value = "";
+
+  document.getElementById("dlg_update_name").focus();
+}
+
+function fillUpdateForm(data) {
+
+  document.getElementById("dlg_update_submit").setAttribute("data-id", data["id"]);
+  document.getElementById("dlg_update_name").value = data["name"];
+  document.getElementById("dlg_update_no").value = data["no"];
+  document.getElementById("dlg_update_street").value = data["street"];
+  document.getElementById("dlg_update_city").value = data["city"];
+  document.getElementById("dlg_update_prov").value = data["prov"];
+  document.getElementById("dlg_update_zip").value = data["zip"];
+  document.getElementById("dlg_update_country").value = data["country"];
+ }
+
+function fillDeleteForm(data) {
+
+  document.getElementById("dlg_delete_submit").setAttribute("data-id", data["id"]);
+  document.getElementById("dlg_delete_name").innerHTML = data["name"];
+  document.getElementById("dlg_delete_no").innerHTML = data["no"];
+  document.getElementById("dlg_delete_street").innerHTML = data["street"];
+  document.getElementById("dlg_delete_city").innerHTML = data["city"];
+  document.getElementById("dlg_delete_prov").innerHTML = data["prov"];
+  document.getElementById("dlg_delete_zip").innerHTML = data["zip"];
+  document.getElementById("dlg_delete_country").innerHTML = data["country"];
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+/* =============================================================================================
+  Wizard: building info
+============================================================================================= */
+
+var update_previous_data = null;
+
+function Dlg_building_basic_info_Clear() {
+
+  document.getElementById("Dlg-building-basic-info-name").value = "";
+  document.getElementById("Dlg-building-basic-info-no").value = "";
+  document.getElementById("Dlg-building-basic-info-street").value = "";
+  document.getElementById("Dlg-building-basic-info-city").value = "";
+  document.getElementById("Dlg-building-basic-info-prov").value = "";
+  document.getElementById("Dlg-building-basic-info-zip").value = "";
+  document.getElementById("Dlg-building-basic-info-country").value = "";
+}
+
+function Dlg_building_basic_info_Cancel() {
+
+  if (confirm("Cancel?")) {
+    Dlg_building_basic_info_Clear(); 
+    document.getElementById("Dlg-building-basic-info").style.display = "none";
+    document.getElementById("btn-building-new").style.display = "inline";
+  } else {
+    //txt = "You pressed Cancel!";
+  }
+}
+
+function Dlg_building_basic_info_Next() {
+
+  // save building info locally
+
+  // remove current dialog
+  document.getElementById("Dlg-building-basic-info").style.display = "none";
+
+  // call next dialog
+  Dlg_builing_owners_Display();
+}
+
+function Dlg_building_basic_info_Display(data) {
+
+  // load temporary data 
+
+  document.getElementById("btn-building-new").style.display = "none";
+  document.getElementById("Dlg-building-basic-info").style.display = "block";
+  document.getElementById("Dlg-building-basic-info-name").focus();
+}
+
+
+/* =============================================================================================
+  Wizard: building owners
+============================================================================================= */
+
+function Dlg_builing_owners_Clear() {
+
+  document.getElementById("Dlg-builing-owners-firstName").value = "";
+  document.getElementById("Dlg-builing-owners-lastName").value = "";
+  document.getElementById("Dlg-builing-owners-address1").value = "";
+  document.getElementById("Dlg-builing-owners-address2").value = "";
+  document.getElementById("Dlg-builing-owners-phone1").value = "";
+  document.getElementById("Dlg-builing-owners-phone2").value = "";
+  document.getElementById("Dlg-builing-owners-fax").value = "";
+  document.getElementById("Dlg-builing-owners-email").value = "";
+  document.getElementById("Dlg-builing-owners-city").value = "";
+  document.getElementById("Dlg-builing-owners-prov").value = "";
+  document.getElementById("Dlg-builing-owners-zip").value = "";
+  document.getElementById("Dlg-builing-owners-country").value = "";
+}
+
+function Dlg_builing_owners_Cancel() {
+
+  if (confirm("Cancel?")) {
+    Dlg_builing_owners_Clear(); 
+    document.getElementById("Dlg-builing-owners").style.display = "none";
+    document.getElementById("btn-building-new").style.display = "inline";
+  } else {
+    //txt = "You pressed Cancel!";
+  }
+}
+
+function Dlg_builing_owners_Next() {
+
+  document.getElementById("Dlg-builing-owners").style.display = "none";
+}
+
+function Dlg_builing_owners_Previous() {
+
+  // save building owners locally
+
+  // remove current dialog
+  document.getElementById("Dlg-builing-owners").style.display = "none";
+
+  // call previous dialog
+  Dlg_building_basic_info_Display();
+}
+
+function Dlg_builing_owners_ClearForm() {
+
+  Dlg_builing_owners_Clear();
+  document.getElementById("Dlg-builing-owners-firstName").focus();
+}
+
+function Dlg_builing_owners_Add() {
+
+}
+
+function Dlg_builing_owners_Display(data) {
+
+  // load temporary data 
+
+  document.getElementById("btn-building-new").style.display = "none";
+  document.getElementById("Dlg-builing-owners").style.display = "block";
+  document.getElementById("Dlg-builing-owners-firstName").focus();
+}
+
+/* =============================================================================================
+  Wizard: building units
+============================================================================================= */
+
+function buildingDelete(buildingID) {
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_GET_ADDRESS"]["K_" + data.envelope.hResult];
+
+      if (data.envelope.hResult != "0x00000000") {
+
+        switch (data.envelope.hResult) {
+          case "0x80010001":
+            break;
+        }
+
+        alert(data.envelope.hResult + " - " + errMsg);
+        //document.getElementById("msg").innerHTML = data.envelope.hResult + " - " + errMsg;
+      }
+      else {
+
+       fillDeleteForm(data.data);
+       document.getElementById("buildingDeleteDlg").style.display = "block";
+       //xhttp = new XMLHttpRequest();
+
+      }
+    }
+  }
+
+  var url = "http://localhost:8000/buildings/" + buildingID + "/address";
+  xhttp.open("GET", url);
+  //xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send();    
+}
+
+function Dlg_Update_Cancel() {
+  Dlg_Update_clearForm();
+  document.getElementById("buildingUpadteDlg").style.display = "none";
+}
+
+function Dlg_Create_submit(obj) {
+  data = {};
+
+  data.name = document.getElementById("dlg_create_name").value;
+  data.no = document.getElementById("dlg_create_no").value;
+  data.street = document.getElementById("dlg_create_street").value;
+  data.city = document.getElementById("dlg_create_city").value;
+  data.prov = document.getElementById("dlg_create_prov").value;
+  data.zip = document.getElementById("dlg_create_zip").value;
+  data.country = document.getElementById("dlg_create_country").value;
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+        let data = JSON.parse(this.responseText);
+        let errMsg = messages["BUILDINGS_API_POST"]["K_" + data.envelope.hResult];
+
+        if (data.envelope.hResult != "0x00000000") {
+
+          switch (data.envelope.hResult) {
+            case "0x80010001":
+              document.getElementById("dlg_create_name").focus();
+              break;
+            case "0x80010002":
+              document.getElementById("dlg_create_no").focus();
+              break;
+            case "0x80010003":
+              document.getElementById("dlg_create_street").focus();
+              break;
+            case "0x80010004":
+              document.getElementById("dlg_create_city").focus();
+              break;
+            case "0x80010005":
+              document.getElementById("dlg_create_prov").focus();
+              break;
+            case "0x80010006":
+              document.getElementById("dlg_create_zip").focus();
+              break;
+            case "0x80010007":
+              document.getElementById("dlg_create_country").focus();
+              break;
+          }
+
+          alert("Error " + data.envelope.hResult);
+        }
+        else {
+
+          Dlg_Create_Done();
+
+          // get the bulding table index from the server
+          var xhttp = new XMLHttpRequest();
+
+          xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+              document.getElementById("t_buildings").innerHTML = this.responseText;
+            }
+            else {
+
+            }
+         }
+
+          var url = "http://localhost:8000/app/" + messages.langid + "/buildings/buildingInfoTable";
+          xhttp.open("GET", url);
+          xhttp.send();    
+        }
+    }
+  }
+
+  // This is toretrieve the CSRF token that must be returned
+  // to the server when a POST resquest is sent.
+
+  const csrftoken = getCookie('csrftoken');
+
+  //alert(csrftoken);
+
+  xhttp.open("POST", "http://localhost:8000/buildings/");
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send(JSON.stringify(data));    
+
+}
+
+function Dlg_Update_submit(obj) {
+  
+  data = {};
+
+  data.buildingID = obj.getAttribute("data-id");
+  data.name = document.getElementById("dlg_update_name").value;
+  data.no = document.getElementById("dlg_update_no").value;
+  data.street = document.getElementById("dlg_update_street").value;
+  data.city = document.getElementById("dlg_update_city").value;
+  data.prov = document.getElementById("dlg_update_prov").value;
+  data.zip = document.getElementById("dlg_update_zip").value;
+  data.country = document.getElementById("dlg_update_country").value;
+
+  //document.getElementById("input").value = JSON.stringify(data);
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_PUT_ADDRESS"]["K_" + data.envelope.hResult];
+
+      if (data.envelope.hResult != "0x00000000") {
+
+        document.getElementById("input").style.backgroundColor = "#fa9daa";
+        document.getElementById("result").style.backgroundColor = "#fa9daa";
+
+        alert(data.envelope.hResult + " - " + errMsg);
+      }
+      else {
+
+        Dlg_Update_clearForm();
+        document.getElementById("buildingUpadteDlg").style.display = "none";
+
+        // get the bulding table index from the server
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("t_buildings").innerHTML = this.responseText;
+          }
+          else {
+
+          }
+        }
+
+        var url = "http://localhost:8000/app/" + messages.langid + "/buildings/buildingInfoTable";
+        xhttp.open("GET", url);
+        xhttp.send();    
+      }
+    }
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  var url = "http://localhost:8000/buildings/" + data.buildingID + "/address";
+  xhttp.open("PUT", url);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send(JSON.stringify(data));    
+}
+
+function Dlg_Delete_Cancel() {
+  document.getElementById("buildingDeleteDlg").style.display = "none";
+}
+
+function Dlg_Delete_submit(obj) {
+  
+  data = {};
+
+  data.buildingID = obj.getAttribute("data-id");
+
+  //document.getElementById("input").value = JSON.stringify(data);
+
+  xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+
+    if (this.readyState == 4 && this.status == 200) {
+
+      let data = JSON.parse(this.responseText);
+      let errMsg = messages["BUILDING_API_DELETE"]["K_" + data.envelope.hResult];
+
+      if (data.envelope.hResult != "0x00000000") {
+
+        alert(data.envelope.hResult + " - " + errMsg);
+      }
+      else {
+
+        Dlg_Update_clearForm();
+        document.getElementById("buildingDeleteDlg").style.display = "none";
+
+        // get the bulding table index from the server
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("t_buildings").innerHTML = this.responseText;
+          }
+          else {
+
+          }
+        }
+
+        var url = "http://localhost:8000/app/" + messages.langid + "/buildings/buildingInfoTable";
+        xhttp.open("GET", url);
+        xhttp.send();    
+      }
+    }
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  var url = "http://localhost:8000/buildings/" + data.buildingID + "";
+  xhttp.open("DELETE", url);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+  xhttp.send(JSON.stringify(data));    
+}
+
+</script>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+.header {
+  background: #fff;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 5px;
+}
+
+@media only screen and (max-width: 600px) {
+  [class*="col-"] {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+@media only screen and (orientation: landscape) {
+  body {
+    background-color: rgb(241, 250, 245);
+  }
+}
+
+@media only screen and (min-width: 601px) {
+  div.example {
+    font-size: 80px;
+  }
+}
+
+/* If the screen size is 600px or less, set the font-size of <div> to 30px */
+@media only screen and (max-width: 600px) {
+  div.example {
+    font-size: 30px;
+  }
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+
+  <div class="header">
+    <div class="topnav w3-collapse">
+      <a class="anchor-inactive" href="/">IMMO-DEV</a>
+      <a href="/app/{{captions.langid}}">{{ captions.COMMON.K_428cba82_129f_4a04_b494_30fc045d137a.caption }}</a>
+      <a class="split" href="#contact">{{captions.COMMON.K_3573d560_09c8_494d_b822_143133ca4c65.caption}}</a>
+      <a class="split" href="#about">{{captions.COMMON.K_75052ea6_64f8_4c61_a9ba_bdb2a4d00681.caption}}</a>
+    </div>
+  </div>
+
+
+  <div style="clear:both; margin-top:30px;"></div>
+    <span class="main-title">{{captions.COMMON.K_7700f65f_b4c5_44dd_95ad_b628419004d4.caption}}</span>
+    <a id="btn-building-new" class="fcc-btn" href="#" onclick="Dlg_building_basic_info_Display();">{{captions.COMMON.K_91a0e783_bd48_4fbc_bc6e_ff01a02209ed.caption}}</a>
+  </div>
+
+  <div class="row">
+  
+  </div>
+
+
+  <!-- ================================================================================================================
+    Building configuration wizard
+  ================================================================================================================= -->
+
+  <div id="Dlg-building-basic-info" class="modal">
+  <div class="modal-content">
+      <!--
+      <span id="Dlg-building-basic-info-close" class="close">&times;</span>
+      -->
+      <p id="Dlg-building-basic-heading-name"  class="modal-title">{{captions.BUILDING_CREATE.K_MSG_1.caption}}</p>
+
+      <div class="row">
+        <div class="col-12 form-panel" >
+            
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_c1885eb6_9414_48ef_9c64_3017d7688293.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-name" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_f5e91168_412e_4048_ab4a_e37602f6653f.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-no" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_d4ec6ac2_c5e5_4e9f_9267_0b94d95ffde6.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-street" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-city" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-prov" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-zip" />
+            </div> 
+          </div>
+          <div class="row">
+            <div class="col-2 xtab-row-heading-01" >
+              {{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}
+            </div> 
+            <div class="col-4 column-cell-01">
+              <input type="text" id="Dlg-building-basic-info-country" />
+            </div> 
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CANCEL/NEXT buttons -->
+      <div class="row">
+        <div class="col-12" >
+          <div style="float:right;">
+            <div style="float:right; margin:5px;"><input type="button" id="Dlg-builing-owners-previous" value="{{captions.COMMON.K_3ee7202a_f027_4a33_88a9_a563b76c1c56.caption}}" onclick="Dlg_building_basic_info_Next();"/></div>
+            <div style="float:right; margin:5px;"><input type="button" id="Dlg-builing-owners-previous" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_building_basic_info_Cancel();"/></div>
+          </div>
+        </div> 
+      </div>
+
+    </div>  
+  </div>  
+    
+  <!-- --------------------------------------------------------------------------------------------------------------
+      Building owner input panel
+  --------------------------------------------------------------------------------------------------------------- -->
+    
+  <div id="Dlg-builing-owners" class="modal">
+  <div class="modal-content">
+    <!--
+    <span id="Dlg-builing-owners-close" class="close">&times;</span>
+    -->
+    <p id="Dlg-builing-owners-heading-name" class="modal-title">{{captions.BUILDING_CREATE.K_MSG_2.caption}}</p>
+
+    <div class="row">
+      <div class="col-6 form-panel" >
+
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_d1cde139_858c_4c72_b243_6c92fd7d761e.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-firstName" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_65ec6d29_055c_4818_9749_21fdf0d3141d.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-lastName" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_aac6fb8d_7fd9_4503_9adc_2d83fcbd3f7e.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-phone1" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_7ffb065f_78da_49e9_83c8_7bb42b42fa48.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-phone2" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_c67e340b_ee9f_4c1c_836f_9b956ba1863c.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-address1" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_e7ba8bd3_0264_4c35_94f7_3e0cfb2f79c4.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-address2" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_f5f21a35_515b_43f5_ae30_26f7f331def8.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-email" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_e891213d_80ce_4ed2_8a8c_af8ad991bcb4.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-city" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_8d9c52a2_9b63_41b0_b580_7708966c3af3.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-fax" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_f908308c_3b94_485a_8794_7eb2d971ce04.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-prov" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_b9aa69ab_ff77_4ddf_bc84_152ad33a799f.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-zip" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            {{captions.COMMON.K_4c5654a5_8927_48c9_a689_e9ff0a313fb3.caption}}
+          </div> 
+          <div class="col-7 column-cell-01">
+            <input type="text" id="Dlg-builing-owners-country" />
+          </div> 
+        </div>
+        <div class="row">
+          <div class="col-4 xtab-row-heading-01" >
+            
+          </div> 
+          <div class="col-7 column-cell-01">
+            <button id="Dlg-builing-owners-add" onclick="Dlg_builing_owners_Add();">{{captions.COMMON.K_d05c8867_a531_4fd6_bed1_9be4abb7e148.caption}}</button>
+            <button id="Dlg-builing-owners-clear" onclick="Dlg_builing_owners_ClearForm();">{{captions.COMMON.K_5eb6b2f8_f8c6_41f4_a6bf_22bf46c54ce8.caption}}</button>
+          </div> 
+        </div>
+
+      </div>
+      <div class="col-6 form-panel" >
+        <!-- This panel contains the new owners-->
+
+      </div>
+    </div>  
+
+    <!-- PREVIOUS/NEXT buttons -->
+    <div class="row">
+      <div class="col-12" >
+        <div>
+          <div style="float:right; margin:5px;"><input type="button" id="Dlg-builing-owners-previous" value="{{captions.COMMON.K_3ee7202a_f027_4a33_88a9_a563b76c1c56.caption}}" onclick="Dlg_builing_owners_Next();"/></div>
+          <div style="float:right; margin:5px;"><input type="button" id="Dlg-builing-owners-previous" value="{{captions.COMMON.K_0c9dd978_2263_4206_9f7e_272acb7a3c2a.caption}}" onclick="Dlg_builing_owners_Previous();"/></div>
+          <div style="float:right; margin:5px;"><input type="button" id="Dlg-builing-owners-previous" value="{{captions.COMMON.K_52a6a83e_a824_4969_b22a_c22e0b43f6c1.caption}}" onclick="Dlg_builing_owners_Cancel();"/></div>
+        </div>
+      </div>
+    </div>  
+
+  </div>  
+  </div>  
+    
+  <!-- --------------------------------------------------------------------------------------------------------------
+      Building unit input panel
+  --------------------------------------------------------------------------------------------------------------- -->
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+/*
+
+//Get the <span> element that closes the modal
+var Dlg_building_basic_info_close_span = document.getElementById("Dlg-building-basic-info-close");  
+var Dlg_builing_owners_span = document.getElementById("Dlg-builing-owners-close");
+
+// When the user clicks on <span> (x), close the modal
+
+Dlg_building_basic_info_close_span.onclick = function() {
+  document.getElementById("Dlg-building-basic-info").style.display = "none";
+}
+Dlg_builing_owners_span.onclick = function() {
+  document.getElementById("Dlg-builing-owners").style.display = "none";
+}
+
+*/
+
+</script>
+
+</body>
+
+</html>
